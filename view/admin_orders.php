@@ -1,90 +1,54 @@
 <main class="container py-5">
-    <div class="row">
-        <div class="col-lg-10 mx-auto">
-            <div class="card shadow-sm mb-5">
-                <div class="card-header bg-success text-white">
-                    <h4 class="mb-0"><i class="fas fa-plus-circle me-2"></i>Thêm Sản Phẩm Mới</h4>
-                </div>
-                <div class="card-body p-4">
-                    <form action="index.php?act=xl_themsp" method="post" enctype="multipart/form-data">
-                        <div class="row">
-                            <div class="col-md-8 mb-3">
-                                <label for="name" class="form-label">Tên Sản Phẩm</label>
-                                <input type="text" name="name" class="form-control" required>
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <label for="id_danhmuc" class="form-label">Danh Mục</label>
-                                <select name="id_danhmuc" class="form-select">
-                                    <?php foreach ($danhmuc as $rc) : ?>
-                                        <option value="<?= $rc["id"] ?>"><?= htmlspecialchars($rc["name"]) ?></option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="price" class="form-label">Giá</label>
-                                <input type="number" min="1" name="price" class="form-control" required>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="quantity" class="form-label">Số Lượng</label>
-                                <input type="number" name="quantity" class="form-control" required>
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="image" class="form-label">Hình Ảnh</label>
-                            <input type="file" name="image" class="form-control">
-                        </div>
-                        <div class="mb-3">
-                            <label for="description" class="form-label">Mô tả</label>
-                            <textarea name="description" class="form-control" rows="4"></textarea>
-                        </div>
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-success btn-lg">Lưu Sản Phẩm</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-
-            <div class="card shadow-sm">
-                <div class="card-header">
-                    <h4 class="mb-0">Danh sách Sản phẩm</h4>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-striped table-hover align-middle">
-                            <thead class="table-dark">
+    <h2 class="mb-4">Quản Lý Đơn Hàng</h2>
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Mã ĐH</th>
+                            <th>Khách Hàng</th>
+                            <th>Ngày Đặt</th>
+                            <th class="text-end">Tổng Tiền</th>
+                            <th class="text-center" style="width: 20%;">Trạng Thái</th>
+                            <th class="text-end">Hành Động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php if (isset($list_orders) && count($list_orders) > 0): ?>
+                            <?php
+                            $status_options = ['pending', 'confirmed', 'shipping', 'completed', 'cancelled'];
+                            ?>
+                            <?php foreach ($list_orders as $order): ?>
                                 <tr>
-                                    <th>Hình ảnh</th>
-                                    <th>Tên SP</th>
-                                    <th>Giá</th>
-                                    <th>Số lượng</th>
-                                    <th class="text-end">Hành động</th>
+                                    <td><strong>#<?= $order['id'] ?></strong></td>
+                                    <td><?= htmlspecialchars($order['fullname']) ?></td>
+                                    <td><?= date('d/m/Y', strtotime($order['created_at'])) ?></td>
+                                    <td class="text-end"><?= number_format($order['total_money']) ?> VNĐ</td>
+                                    <td class="text-center">
+                                        <form action="index.php?act=update_order_status" method="POST">
+                                            <input type="hidden" name="order_id" value="<?= $order['id'] ?>">
+                                            <select name="status" class="form-select form-select-sm" onchange="this.form.submit()">
+                                                <?php foreach ($status_options as $status): ?>
+                                                    <option value="<?= $status ?>" <?= ($order['status'] == $status) ? 'selected' : '' ?>>
+                                                        <?= ucfirst($status) ?>
+                                                    </option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                        </form>
+                                    </td>
+                                    <td class="text-end">
+                                        <a href="index.php?act=order_detail&id=<?= $order['id'] ?>" class="btn btn-sm btn-outline-primary">Xem</a>
+                                    </td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                <?php if (isset($danhsach) && count($danhsach) > 0) : ?>
-                                    <?php foreach ($danhsach as $rc) : ?>
-                                        <tr>
-                                            <td><img src="../view/image/<?= htmlspecialchars($rc['image']) ?>" alt="" width="60" class="img-thumbnail"></td>
-                                            <td><?= htmlspecialchars($rc['name']) ?></td>
-                                            <td><?= number_format($rc['price']) ?> VNĐ</td>
-                                            <td><?= htmlspecialchars($rc['quantity']) ?></td>
-                                            <td class="text-end">
-                                                <a href="index.php?act=editsp&id=<?= $rc['id'] ?>" class="btn btn-warning btn-sm">Sửa</a>
-                                                <a href="index.php?act=deletesp&id=<?= $rc['id'] ?>" class="btn btn-danger btn-sm" onclick="return confirm('Ní có chắc muốn xóa không?');">Xóa</a>
-                                            </td>
-                                        </tr>
-                                    <?php endforeach; ?>
-                                <?php else : ?>
-                                    <tr>
-                                        <td colspan="5" class="text-center">Chưa có sản phẩm nào.</td>
-                                    </tr>
-                                <?php endif; ?>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <tr>
+                                <td colspan="6" class="text-center">Chưa có đơn hàng nào.</td>
+                            </tr>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

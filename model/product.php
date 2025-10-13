@@ -155,4 +155,12 @@ class product
         $params = ["%" . $keyword . "%"];
         return $xl->readitem($sql, $params);
     }
+    public function updateProductQuantity($product_id, $quantity_sold)
+    {
+        $xl = new xl_data();
+        // Dùng `quantity - ?` để trừ đi số lượng đã bán
+        $sql = "UPDATE products SET quantity = quantity - ? WHERE id = ?";
+        $params = [$quantity_sold, $product_id];
+        $xl->execute_item($sql, $params);
+    }
 }

@@ -18,12 +18,18 @@
 
                             <p class="card-text product-price mt-auto"><?= number_format($rc['price']) ?> VNĐ</p>
 
+
                             <form action="index.php?act=add_to_cart" method="post" class="mt-3">
                                 <input type="hidden" name="id" value="<?= $rc['id'] ?>">
                                 <input type="hidden" name="name" value="<?= htmlspecialchars($rc['name']) ?>">
                                 <input type="hidden" name="price" value="<?= $rc['price'] ?>">
                                 <input type="hidden" name="image" value="<?= htmlspecialchars($rc['image']) ?>">
-                                <button type="submit" class="btn btn-primary w-100"><i class="fa-solid fa-cart-shopping"></i> Thêm vào giỏ</button>
+
+                                <?php if ($rc['quantity'] > 0): ?>
+                                    <button type="submit" class="btn btn-primary w-100"><i class="fa-solid fa-cart-shopping"></i> Thêm vào giỏ</button>
+                                <?php else: ?>
+                                    <button type="button" class="btn btn-secondary w-100" disabled>Hết hàng</button>
+                                <?php endif; ?>
                             </form>
                         </div>
                     </div>

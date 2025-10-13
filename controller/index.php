@@ -275,6 +275,9 @@ switch ($act) {
                 );
                 foreach ($_SESSION['cart'] as $product_id => $item) {
                     $order_model->addOrderDetail($order_id, $product_id, $item['quantity'], $item['price']);
+                    // THÊM LOGIC TRỪ KHO VÀO ĐÂY
+                    $prod_model = new product();
+                    $prod_model->updateProductQuantity($product_id, $item['quantity']);
                 }
 
                 unset($_SESSION['cart']);
