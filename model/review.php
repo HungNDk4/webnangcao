@@ -1,0 +1,60 @@
+<?php
+class review
+{
+
+    /**
+     * Thêm một đánh giá mới vào database.
+     * @param int $product_id
+     * @param int $user_id
+     * @param int $rating Số sao, từ 1 đến 5
+     * @param string $comment Nội dung bình luận
+     */
+    public function addReview($product_id, $user_id, $rating, $comment)
+    {
+        $xl = new xl_data();
+        $sql = "INSERT INTO reviews (product_id, user_id, rating, comment) VALUES (?, ?, ?, ?)";
+        $params = [$product_id, $user_id, $rating, $comment];
+        $xl->execute_item($sql, $params);
+    }
+
+
+    /**
+     * Lấy tất cả đánh giá của một sản phẩm, kèm theo tên người đánh giá.
+     * @param int $product_id
+     * @return array Mảng các đánh giá
+     */
+    public function getReviewsByProductId($product_id)
+    {
+        $xl = new xl_data();
+        // Dùng JOIN để lấy tên của người dùng từ bảng 'users'
+        $sql = "SELECT r.*, u.fullname 
+                FROM reviews r 
+                JOIN users u ON r.user_id = u.id 
+                WHERE r.product_id = ? 
+                ORDER BY r.created_at DESC";
+        $params = [$product_id];
+        return $xl->readitem($sql, $params);
+    }
+    public function getAllReviews()
+    {
+        $xl = new xl_data();
+        $sql = "SELECT r.id, r.comment, r.rating, r.created_at, u.fullname, p.name AS product_name
+                FROM reviews r
+                JOIN users u ON r.user_id = u.id
+                JOIN products p ON r.product_id = p.id
+                ORDER BY r.created_at DESC";
+        return $xl->readitem($sql);
+    }
+
+    /**
+     * Xóa một đánh giá theo ID.
+     * @param int $id
+     */
+    public function deleteReview($id)
+    {
+        $xl = new xl_data();
+        $sql = "DELETE FROM reviews WHERE id = ?";
+        $params = [$id];
+        $xl->execute_item($sql, $params);
+    }
+}
