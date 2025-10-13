@@ -1,6 +1,4 @@
 <?php
-
-
 class statistic
 {
 
@@ -34,7 +32,6 @@ class statistic
     public function getTopSellingProducts($start_date, $end_date)
     {
         $xl = new xl_data();
-        // PHẢI JOIN THÊM BẢNG ORDERS ĐỂ LỌC THEO NGÀY
         $sql = "SELECT p.name, p.image, SUM(od.quantity) AS total_sold
                 FROM order_details od
                 JOIN products p ON od.product_id = p.id
@@ -46,33 +43,27 @@ class statistic
         $params = [$start_date, $end_date];
         return $xl->readitem($sql, $params);
     }
-    /**
-     * Lấy 5 sản phẩm bán ế nhất.
-     * @return array Danh sách sản phẩm
-     */
-    public function getLeastSellingProducts()
+
+    // HÀM NÀY CŨNG PHẢI LỌC THEO NGÀY
+    public function getLeastSellingProducts($start_date, $end_date)
     {
         $xl = new xl_data();
-        // Dùng LEFT JOIN để lấy cả những sản phẩm CHƯA TỪNG được bán (total_sold sẽ là NULL).
-        // COALESCE(SUM(od.quantity), 0) để đổi NULL thành 0.
-        // Sắp xếp tăng dần và lấy 5 sản phẩm đầu tiên.
         $sql = "SELECT p.name, p.image, COALESCE(SUM(od.quantity), 0) AS total_sold
                 FROM products p
                 LEFT JOIN order_details od ON p.id = od.product_id
+                LEFT JOIN orders o ON od.order_id = o.id AND o.created_at BETWEEN ? AND ?
                 GROUP BY p.id
                 ORDER BY total_sold ASC
                 LIMIT 5";
-
-        return $xl->readitem($sql);
+        $params = [$start_date, $end_date];
+        return $xl->readitem($sql, $params);
     }
 
+    // HÀM NÀY KHÔNG PHỤ THUỘC THỜI GIAN, GIỮ NGUYÊN
     public function getTopInventoryProducts()
     {
-
         $xl = new xl_data();
-
-        $sql = 'SELECT * FROM products order by quantity desc limit 5';
-
+        $sql = 'SELECT name, image, quantity FROM products ORDER BY quantity DESC LIMIT 5';
         return $xl->readitem($sql);
     }
 }

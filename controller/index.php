@@ -445,12 +445,13 @@ switch ($act) {
 
 
     // ============== QUẢN LÝ CỦA ADMIN ==============
+
     case 'admin_dashboard':
         if (isset($_SESSION['user']) && $_SESSION['user']->getRole() === 'admin') {
-            $filter = $_GET['filter'] ?? 'all'; // Mặc định là xem tất cả
+            $filter = $_GET['filter'] ?? 'all';
             $title = 'Thống kê tổng quan';
 
-            // Tính toán khoảng ngày dựa trên filter
+            // Tính toán khoảng ngày
             switch ($filter) {
                 case 'today':
                     $start_date = date('Y-m-d 00:00:00');
@@ -458,7 +459,7 @@ switch ($act) {
                     $title = 'Thống kê hôm nay';
                     break;
                 case 'week':
-                    $start_date = date('Y-m-d 00:00:00', strtotime('-7 days'));
+                    $start_date = date('Y-m-d 00:00:00', strtotime('-6 days'));
                     $end_date = date('Y-m-d 23:59:59');
                     $title = 'Thống kê 7 ngày qua';
                     break;
@@ -472,8 +473,7 @@ switch ($act) {
                     $end_date = date('Y-12-31 23:59:59');
                     $title = 'Thống kê năm nay';
                     break;
-                default: // 'all'
-                    // Lấy một khoảng ngày rất rộng để bao quát tất cả
+                default:
                     $start_date = '2020-01-01 00:00:00';
                     $end_date = date('Y-m-d 23:59:59');
                     break;
@@ -481,11 +481,13 @@ switch ($act) {
 
             $stat_model = new statistic();
 
+            // GỌI ĐẦY ĐỦ CÁC HÀM, KHÔNG ĐƯỢC THIẾU
             $total_revenue = $stat_model->getTotalRevenue($start_date, $end_date);
             $total_orders = $stat_model->getTotalOrders($start_date, $end_date);
             $total_customers = $stat_model->getTotalCustomers($start_date, $end_date);
             $top_sell = $stat_model->getTopSellingProducts($start_date, $end_date);
-            // (Các thống kê khác giữ nguyên)
+            $least_sell = $stat_model->getLeastSellingProducts($start_date, $end_date); // Thêm dòng này
+            $top_inventory = $stat_model->getTopInventoryProducts(); // Thêm dòng này
 
             include '../view/admin_dashboard.php';
         } else {
