@@ -22,6 +22,10 @@ require_once '../PHPMailer/src/SMTP.php';
 // QUY TẮC 2: BẮT ĐẦU SESSION
 session_start();
 
+// === BẮT ĐẦU THÊM MỚI ===
+// Lấy danh sách danh mục để hiển thị trên menu ở mọi trang
+$cat_model_for_menu = new category();
+$danhmuc_for_menu = $cat_model_for_menu->getAllCategories();
 // QUY TẮC 3: HIỂN THỊ GIAO DIỆN
 include_once '../view/header.php';
 include_once '../view/menu.php';
@@ -44,7 +48,25 @@ switch ($act) {
         $danhsach = $prod_model->getAllProducts();
         include '../view/trangchu.php';
         break;
+    case 'products_by_cat':
+        if (isset($_GET['id'])) {
+            $category_id = $_GET['id'];
 
+            // Lấy tên danh mục để hiển thị tiêu đề
+            $cat_model = new category();
+            $category_info = $cat_model->getCategoryById($category_id);
+
+            // Lấy danh sách sản phẩm thuộc danh mục đó
+            $prod_model = new product();
+            $danhsach = $prod_model->getProductsByCategoryId($category_id);
+
+            include '../view/products_by_cat.php';
+        } else {
+            // Nếu không có id, quay về trang chủ
+            header('Location: index.php');
+            exit();
+        }
+        break;
     // ============== USER ==============
     case 'register':
         include '../view/register.php';
@@ -71,11 +93,14 @@ switch ($act) {
             echo "Email đã được đăng ký!";
             break;
         }
+
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
         $newUser = new user();
         $newUser->setFullname($fullname);
         $newUser->setEmail($email);
         $newUser->setPassword($hashed_password);
+        // ===== THÊM DÒNG NÀY =====
+        $newUser->setRole('customer'); // Gán vai trò mặc định
         $user_model->addUser($newUser);
         $controller = new controller();
         $controller->sendWelcomeEmail($email, $fullname);
@@ -299,6 +324,8 @@ switch ($act) {
                 // XỬ LÝ THANH TOÁN COD
                 $order_model = new order();
                 $order_info = $_SESSION['order_info'];
+                $cart_items_for_email = $_SESSION['cart']; // <-- Lấy thông tin giỏ hàng trước khi xóa
+
                 $order_id = $order_model->createOrder(
                     $order_info['user_id'],
                     $order_info['fullname'],
@@ -310,10 +337,20 @@ switch ($act) {
                 );
                 foreach ($_SESSION['cart'] as $product_id => $item) {
                     $order_model->addOrderDetail($order_id, $product_id, $item['quantity'], $item['price']);
-                    // THÊM LOGIC TRỪ KHO VÀO ĐÂY
                     $prod_model = new product();
                     $prod_model->updateProductQuantity($product_id, $item['quantity']);
                 }
+
+                // === BẮT ĐẦU THÊM MỚI ===
+                // Gửi email xác nhận
+                $controller = new controller();
+                $controller->sendOrderConfirmationEmail(
+                    $order_info['email'],
+                    $order_info['fullname'],
+                    $order_info,
+                    $cart_items_for_email
+                );
+                // === KẾT THÚC THÊM MỚI ===
 
                 unset($_SESSION['cart']);
                 unset($_SESSION['voucher']);

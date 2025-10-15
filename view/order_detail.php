@@ -29,6 +29,25 @@
                 </div>
                 <div class="card-body">
                     <p><strong>Ngày đặt:</strong> <?= date('d/m/Y H:i', strtotime($order_info['created_at'])) ?></p>
+
+                    <p><strong>Trạng thái:</strong>
+                        <?php
+                        $status = htmlspecialchars($order_info['status']);
+                        $badge_class = 'bg-secondary'; // Màu mặc định
+                        if ($status == 'completed') {
+                            $badge_class = 'bg-success';
+                        } elseif ($status == 'shipping') {
+                            $badge_class = 'bg-info text-dark';
+                        } elseif ($status == 'confirmed') {
+                            $badge_class = 'bg-primary';
+                        } elseif ($status == 'cancelled') {
+                            $badge_class = 'bg-danger';
+                        } elseif ($status == 'pending') {
+                            $badge_class = 'bg-warning text-dark';
+                        }
+                        echo "<span class='badge {$badge_class}'>" . ucfirst($status) . "</span>";
+                        ?>
+                    </p>
                     <p><strong>Người nhận:</strong> <?= htmlspecialchars($order_info['fullname']) ?></p>
                     <p><strong>Email:</strong> <?= htmlspecialchars($order_info['email']) ?></p>
                     <p><strong>Số điện thoại:</strong> <?= htmlspecialchars($order_info['phone_number']) ?></p>

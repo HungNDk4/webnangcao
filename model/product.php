@@ -163,4 +163,11 @@ class product
         $params = [$quantity_sold, $product_id];
         $xl->execute_item($sql, $params);
     }
+    public function getProductsByCategoryId($category_id)
+    {
+        $xl = new xl_data();
+        $sql = "SELECT * FROM products WHERE category_id = ? ORDER BY id DESC";
+        $params = [$category_id];
+        return $xl->readitem($sql, $params);
+    }
 }
