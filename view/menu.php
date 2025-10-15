@@ -13,8 +13,32 @@
 
         <ul>
             <li><a href="index.php">TRANG CHỦ</a></li>
-            <li><a href="index.php?act=hienthi_sp">SẢN PHẨM</a></li>
+            <li>
+                <a href="index.php?act=hienthi_sp">SẢN PHẨM</a>
+                <ul class="submenu">
+                    <li><a href="index.php?act=hienthi_sp">Tất cả sản phẩm</a></li>
+                    <?php
+                    // Dùng biến $danhmuc_for_menu đã được tạo ở controller
+                    if (isset($danhmuc_for_menu) && !empty($danhmuc_for_menu)) {
+                        foreach ($danhmuc_for_menu as $dm) {
+                            echo '<li><a href="index.php?act=products_by_cat&id=' . $dm['id'] . '">' . htmlspecialchars($dm['name']) . '</a></li>';
+                        }
+                    }
+                    ?>
+                </ul>
+            </li>
 
+            <li>
+                <a href="index.php?act=view_cart">
+                    <i class="fas fa-shopping-cart"></i> Giỏ Hàng
+                    <?php
+                    $cart_count = isset($_SESSION['cart']) ? count($_SESSION['cart']) : 0;
+                    if ($cart_count > 0) {
+                        echo "<span class='badge bg-danger ms-1'>{$cart_count}</span>";
+                    }
+                    ?>
+                </a>
+            </li>
             <?php if (isset($_SESSION['user'])): ?>
                 <li>
                     <a href="#">XIN CHÀO, <?= $_SESSION['user']->getFullname() ?></a>
@@ -46,18 +70,7 @@
                 <li><a href="index.php?act=login">ĐĂNG NHẬP</a></li>
                 <li><a href="index.php?act=register">ĐĂNG KÝ</a></li>
             <?php endif; ?>
-
-            <li>
-                <a href="index.php?act=view_cart">
-                    <i class="fas fa-shopping-cart"></i> Giỏ Hàng
-                    <?php
-                    $cart_count = isset($_SESSION['cart']) ? count($_SESSION['cart']) : 0;
-                    if ($cart_count > 0) {
-                        echo "<span class='badge bg-danger ms-1'>{$cart_count}</span>";
-                    }
-                    ?>
-                </a>
-            </li>
         </ul>
     </div>
+
 </div>
