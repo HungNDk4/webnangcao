@@ -10,6 +10,7 @@
                             <th>Họ và Tên</th>
                             <th>Email</th>
                             <th>Vai trò</th>
+                            <th class="text-center">Hạng</th>
                             <th class="text-center">Trạng Thái</th>
                             <th class="text-end">Hành Động</th>
                         </tr>
@@ -23,6 +24,18 @@
                                     <td><?= htmlspecialchars($user['email']) ?></td>
                                     <td><?= htmlspecialchars($user['role']) ?></td>
                                     <td class="text-center">
+                                        <?php
+                                        $rank = htmlspecialchars($user['rank']);
+                                        $badge_class = 'bg-secondary';
+                                        if ($rank == 'Diamond') {
+                                            $badge_class = 'bg-info';
+                                        } elseif ($rank == 'Gold') {
+                                            $badge_class = 'bg-warning';
+                                        }
+                                        echo "<span class='badge {$badge_class}'>{$rank}</span>";
+                                        ?>
+                                    </td>
+                                    <td class="text-center">
                                         <?php if ($user['status'] == 1): ?>
                                             <span class="badge bg-success">Hoạt động</span>
                                         <?php else: ?>
@@ -31,16 +44,16 @@
                                     </td>
                                     <td class="text-end">
                                         <?php if ($user['status'] == 1): ?>
-                                            <a href="index.php?act=toggle_user_status&id=<?= $user['id'] ?>&status=1&return_to=admin_users" class="btn btn-sm btn-outline-danger" onclick="return confirm('...');">Khóa</a>
+                                            <a href="index.php?act=toggle_user_status&id=<?= $user['id'] ?>&status=1&return_to=admin_users" class="btn btn-sm btn-outline-danger" onclick="return confirm('Bạn chắc chắn muốn khóa tài khoản này?');">Khóa</a>
                                         <?php else: ?>
-                                            <a href="index.php?act=toggle_user_status&id=<?= $user['id'] ?>&status=0&return_to=admin_users" class="btn btn-sm btn-outline-success" onclick="return confirm('...');">Mở khóa</a>
+                                            <a href="index.php?act=toggle_user_status&id=<?= $user['id'] ?>&status=0&return_to=admin_users" class="btn btn-sm btn-outline-success" onclick="return confirm('Bạn chắc chắn muốn mở khóa tài khoản này?');">Mở khóa</a>
                                         <?php endif; ?>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
                         <?php else: ?>
                             <tr>
-                                <td colspan="6" class="text-center">Chưa có người dùng nào.</td>
+                                <td colspan="7" class="text-center">Chưa có người dùng nào.</td>
                             </tr>
                         <?php endif; ?>
                     </tbody>

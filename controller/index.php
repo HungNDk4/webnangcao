@@ -142,6 +142,9 @@ switch ($act) {
         $prod->setQuantity($_POST["quantity"]);
         $prod->setDescription($_POST["description"]);
         $prod->setCategoryId($_POST['id_danhmuc']);
+        // LẤY GIÁ TRỊ SALE_PRICE
+        $prod->setSalePrice(empty($_POST["sale_price"]) ? NULL : $_POST["sale_price"]);
+        $prod->setQuantity($_POST["quantity"]);
         if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
             $hinhsp = basename($_FILES['image']['name']);
             $prod->setImage($hinhsp);
@@ -172,6 +175,8 @@ switch ($act) {
         $prod->setQuantity($_POST["quantity"]);
         $prod->setDescription($_POST["description"]);
         $prod->setCategoryId($_POST['id_danhmuc']);
+        $prod->setSalePrice(empty($_POST["sale_price"]) ? NULL : $_POST["sale_price"]);
+        $prod->setQuantity($_POST["quantity"]);
         if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
             $hinhsp = basename($_FILES['image']['name']);
             $prod->setImage($hinhsp);
@@ -191,21 +196,21 @@ switch ($act) {
         break;
     case 'add_to_cart':
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // 1. Lấy thông tin sản phẩm
             $id = $_POST['id'];
             $name = $_POST['name'];
             $price = $_POST['price'];
+            $sale_price = $_POST['sale_price']; // Lấy sale_price từ form
             $image = $_POST['image'];
 
-            // 2. Kiểm tra và cập nhật giỏ hàng
+            // Ưu tiên lấy giá khuyến mãi nếu có
+            $final_price = ($sale_price > 0) ? $sale_price : $price;
+
             if (isset($_SESSION['cart'][$id])) {
-                // SỬA LỖI LOGIC: Dùng $id thay vì 'id'
                 $_SESSION['cart'][$id]['quantity']++;
             } else {
-                // Thêm sản phẩm mới vào giỏ
                 $_SESSION['cart'][$id] = [
                     'name' => $name,
-                    'price' => $price,
+                    'price' => $final_price, // Lưu giá cuối cùng vào giỏ
                     'image' => $image,
                     'quantity' => 1
                 ];
@@ -213,7 +218,37 @@ switch ($act) {
         }
         header('Location: index.php');
         exit();
-        //thanh toán 
+
+
+
+        /* ----- BẮT ĐẦU CODE MỚI ----- */
+    case 'update_cart':
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $id_sp = $_POST['id_sp'];
+            $action = $_POST['action']; // 'increase' hoặc 'decrease'
+
+            if (isset($_SESSION['cart'][$id_sp])) {
+                if ($action == 'increase') {
+                    $_SESSION['cart'][$id_sp]['quantity']++;
+                } elseif ($action == 'decrease') {
+                    $_SESSION['cart'][$id_sp]['quantity']--;
+                    // Nếu số lượng giảm về 0, xóa sản phẩm khỏi giỏ hàng
+                    if ($_SESSION['cart'][$id_sp]['quantity'] <= 0) {
+                        unset($_SESSION['cart'][$id_sp]);
+                    }
+                }
+            }
+        }
+        // Sau khi cập nhật, quay lại trang giỏ hàng
+        header('Location: index.php?act=view_cart');
+        exit();
+
+    case 'remove_from_cart':
+        if (isset($_GET['id']) && isset($_SESSION['cart'][$_GET['id']])) {
+            unset($_SESSION['cart'][$_GET['id']]);
+        }
+        header('Location: index.php?act=view_cart');
+        exit();
 
     case 'checkout':
         // Kiểm tra xem người dùng đã đăng nhập chưa
@@ -518,6 +553,20 @@ switch ($act) {
 
             $order_model = new order();
             $order_model->updateOrderStatus($order_id, $status);
+
+            /* ----- BẮT ĐẦU CODE MỚI ----- */
+            // Nếu trạng thái mới là 'completed', hãy cập nhật lại hạng cho khách hàng
+            if ($status === 'completed') {
+                // Lấy thông tin đơn hàng để biết user_id là ai
+                $order_info = $order_model->getOrderById($order_id);
+                if ($order_info) {
+                    $user_id = $order_info['user_id'];
+                    // Gọi hàm cập nhật hạng
+                    $user_model = new user();
+                    $user_model->updateUserRank($user_id);
+                }
+            }
+            /* ----- KẾT THÚC CODE MỚI ----- */
 
             // Sau khi cập nhật, quay lại trang quản lý đơn hàng
             header('Location: index.php?act=admin_orders');

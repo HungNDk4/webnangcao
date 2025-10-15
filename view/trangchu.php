@@ -15,10 +15,14 @@
                                     <?= htmlspecialchars($rc['name']) ?>
                                 </a>
                             </h5>
-
-                            <p class="card-text product-price mt-auto"><?= number_format($rc['price']) ?> VNĐ</p>
-
-
+                            <?php if ($rc['sale_price'] > 0) : ?>
+                                <div class="card-text product-price mt-auto text-dark "> <del><?= number_format($rc['price']) ?>VND</del>
+                                    <br>
+                                    <p class=text-primary><?= number_format($rc['sale_price']) ?> VND</p>
+                                </div>
+                            <?php else : ?>
+                                <p class="card-text product-price mt-auto text-warning"> <?= number_format($rc['price']) ?></p>
+                            <?php endif ?>
                             <form action="index.php?act=add_to_cart" method="post" class="mt-3">
                                 <input type="hidden" name="id" value="<?= $rc['id'] ?>">
                                 <input type="hidden" name="name" value="<?= htmlspecialchars($rc['name']) ?>">

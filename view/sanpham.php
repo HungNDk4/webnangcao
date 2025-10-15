@@ -23,12 +23,18 @@
                         </div>
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label for="price" class="form-label">Giá</label>
-                                <input type="number" min="1" name="price" class="form-control" required>
+                                <label for="price" class="form-label">Giá Gốc</label>
+                                <input type="number" min="1" name="price" class="form-control" value="<?= $sanpham_edit['price'] ?>" required>
                             </div>
                             <div class="col-md-6 mb-3">
+                                <label for="sale_price" class="form-label">Giá Khuyến Mãi</label>
+                                <input type="number" min="0" name="sale_price" class="form-control" value="<?= $sanpham_edit['sale_price'] ?? 0 ?>">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
                                 <label for="quantity" class="form-label">Số Lượng</label>
-                                <input type="number" name="quantity" class="form-control" required>
+                                <input type="number" name="quantity" class="form-control" value="<?= $sanpham_edit['quantity'] ?>" required>
                             </div>
                         </div>
                         <div class="mb-3">

@@ -66,4 +66,18 @@ class statistic
         $sql = 'SELECT name, image, quantity FROM products ORDER BY quantity DESC LIMIT 5';
         return $xl->readitem($sql);
     }
+    /* ----- BẮT ĐẦU CODE MỚI ----- */
+    /**
+     * Tính tổng số tiền một người dùng đã chi tiêu cho các đơn hàng đã hoàn thành.
+     * @param int $user_id
+     * @return float
+     */
+    public function getTotalSpentByUser($user_id)
+    {
+        $xl = new xl_data();
+        $sql = "SELECT SUM(total_money) AS total_spent FROM orders WHERE user_id = ? AND status = 'completed'";
+        $params = [$user_id];
+        $result = $xl->readitem($sql, $params);
+        return $result[0]['total_spent'] ?? 0;
+    }
 }

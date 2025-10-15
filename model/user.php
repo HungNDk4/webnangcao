@@ -11,7 +11,7 @@ class user
     private $address;
     private $role;
     private $status;
-
+    private $rank;
     // 2. Tạo các hàm get/set cho từng thuộc tính
     public function getId()
     {
@@ -84,6 +84,15 @@ class user
     {
         $this->status = $value;
     }
+    // <-- THÊM HÀM GET/SET CHO RANK -->
+    public function getRank()
+    {
+        return $this->rank;
+    }
+    public function setRank($value)
+    {
+        $this->rank = $value;
+    }
 
     // 3. Cập nhật các hàm xử lý database
 
@@ -132,7 +141,6 @@ class user
 
         if (count($result) > 0) {
             $user_data = $result[0];
-            // Tạo một đối tượng user mới và đổ dữ liệu vào đó
             $user_obj = new user();
             $user_obj->setId($user_data['id']);
             $user_obj->setFullname($user_data['fullname']);
@@ -142,6 +150,7 @@ class user
             $user_obj->setAddress($user_data['address']);
             $user_obj->setRole($user_data['role']);
             $user_obj->setStatus($user_data['status']);
+            $user_obj->setRank($user_data['rank']); // <-- CẬP NHẬT Ở ĐÂY
 
             return $user_obj;
         }
@@ -188,6 +197,32 @@ class user
         $xl = new xl_data();
         $sql = "DELETE FROM users WHERE id = ?";
         $params = [$user_id];
+        $xl->execute_item($sql, $params);
+    }
+    /* ----- BẮT ĐẦU CODE MỚI ----- */
+    /**
+     * Cập nhật hạng của người dùng dựa trên tổng chi tiêu.
+     * @param int $user_id
+     */
+    public function updateUserRank($user_id)
+    {
+        // 1. Lấy tổng chi tiêu
+        $stat_model = new statistic();
+        $total_spent = $stat_model->getTotalSpentByUser($user_id);
+
+        // 2. Xác định hạng mới
+        // BẠN CÓ THỂ THAY ĐỔI CÁC MỐC CHI TIÊU NÀY
+        $new_rank = 'Silver'; // Hạng mặc định
+        if ($total_spent >= 15000000) { // Trên 15 triệu
+            $new_rank = 'Diamond';
+        } elseif ($total_spent >= 5000000) { // Từ 5 triệu đến dưới 15 triệu
+            $new_rank = 'Gold';
+        }
+
+        // 3. Cập nhật vào database
+        $xl = new xl_data();
+        $sql = "UPDATE users SET `rank` = ? WHERE id = ?";
+        $params = [$new_rank, $user_id];
         $xl->execute_item($sql, $params);
     }
 }

@@ -12,7 +12,11 @@
                 <input type="hidden" name="name" value="<?= htmlspecialchars($product['name']) ?>">
                 <input type="hidden" name="price" value="<?= $product['price'] ?>">
                 <input type="hidden" name="image" value="<?= htmlspecialchars($product['image']) ?>">
-                <button type="submit" class="btn btn-primary btn-lg"><i class="fa-solid fa-cart-shopping"></i> Thêm vào giỏ</button>
+                <?php if ($product['quantity'] > 0): ?>
+                    <button type="submit" class="btn btn-primary w-100"><i class="fa-solid fa-cart-shopping"></i> Thêm vào giỏ</button>
+                <?php else: ?>
+                    <button type="button" class="btn btn-secondary w-100" disabled>Hết hàng</button>
+                <?php endif; ?>
             </form>
         </div>
     </div>
