@@ -1,34 +1,152 @@
+</main>
 <footer class="footer">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-4 mb-3">
-                    <h5>Giới thiệu</h5>
-                    <p>Website bán hàng được phát triển với mô hình MVC, cung cấp các sản phẩm chất lượng cao đến tay người tiêu dùng.</p>
-                </div>
-                <div class="col-md-4 mb-3">
-                    <h5>Liên kết nhanh</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="#">Trang chủ</a></li>
-                        <li><a href="#">Sản phẩm</a></li>
-                        <li><a href="#">Giới thiệu</a></li>
-                        <li><a href="#">Liên hệ</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-4 mb-3">
-                    <h5>Theo dõi chúng tôi</h5>
-                    <div class="social-icons">
-                        <a href="#" class="text-white"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" class="text-white"><i class="fab fa-twitter"></i></a>
-                        <a href="#" class="text-white"><i class="fab fa-instagram"></i></a>
+    <div class="container">
+        <div class="row g-4 py-4">
+            <div class="col-12 col-md-12 col-lg-4">
+                <h6 class="mb-4">Categories</h6>
+                <div class="row">
+                    <div class="col-6">
+                        <ul class="nav flex-column">
+                            <li class="nav-item mb-2"><a href="#!" class="nav-link">Vegetables & Fruits</a></li>
+                            <li class="nav-item mb-2"><a href="#!" class="nav-link">Breakfast & instant food</a></li>
+                            <li class="nav-item mb-2"><a href="#!" class="nav-link">Bakery & Biscuits</a></li>
+                            <li class="nav-item mb-2"><a href="#!" class="nav-link">Atta, rice & dal</a></li>
+                            <li class="nav-item mb-2"><a href="#!" class="nav-link">Sauces & spreads</a></li>
+                            <li class="nav-item mb-2"><a href="#!" class="nav-link">Organic & gourmet</a></li>
+                            <li class="nav-item mb-2"><a href="#!" class="nav-link">Baby care</a></li>
+                            <li class="nav-item mb-2"><a href="#!" class="nav-link">Cleaning essentials</a></li>
+                            <li class="nav-item mb-2"><a href="#!" class="nav-link">Personal care</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-6">
+                        <ul class="nav flex-column">
+                            <li class="nav-item mb-2"><a href="#!" class="nav-link">Dairy, bread & eggs</a></li>
+                            <li class="nav-item mb-2"><a href="#!" class="nav-link">Cold drinks & juices</a></li>
+                            <li class="nav-item mb-2"><a href="#!" class="nav-link">Tea, coffee & drinks</a></li>
+                            <li class="nav-item mb-2"><a href="#!" class="nav-link">Masala, oil & more</a></li>
+                            <li class="nav-item mb-2"><a href="#!" class="nav-link">Chicken, meat & fish</a></li>
+                            <li class="nav-item mb-2"><a href="#!" class="nav-link">Paan corner</a></li>
+                            <li class="nav-item mb-2"><a href="#!" class="nav-link">Pharma & wellness</a></li>
+                            <li class="nav-item mb-2"><a href="#!" class="nav-link">Home & office</a></li>
+                            <li class="nav-item mb-2"><a href="#!" class="nav-link">Pet care</a></li>
+                        </ul>
                     </div>
                 </div>
             </div>
-            <div class="text-center py-3" style="border-top: 1px solid #495057;">
-                <p class="mb-0">&copy; 2025 Bản quyền thuộc về ní. Phát triển bởi Gemini.</p>
+            <div class="col-12 col-md-12 col-lg-8">
+                <div class="row g-4">
+                    <div class="col-6 col-sm-6 col-md-3">
+                        <h6 class="mb-4">Get to know us</h6>
+                        <ul class="nav flex-column">
+                            <li class="nav-item mb-2"><a href="#!" class="nav-link">Company</a></li>
+                            <li class="nav-item mb-2"><a href="#!" class="nav-link">About</a></li>
+                            <li class="nav-item mb-2"><a href="#1" class="nav-link">Blog</a></li>
+                            <li class="nav-item mb-2"><a href="#!" class="nav-link">Help Center</a></li>
+                            <li class="nav-item mb-2"><a href="#!" class="nav-link">Our Value</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-6 col-sm-6 col-md-3">
+                        <h6 class="mb-4">For Consumers</h6>
+                        <ul class="nav flex-column">
+                            <li class="nav-item mb-2"><a href="#!" class="nav-link">Payments</a></li>
+                            <li class="nav-item mb-2"><a href="#!" class="nav-link">Shipping</a></li>
+                            <li class="nav-item mb-2"><a href="#!" class="nav-link">Product Returns</a></li>
+                            <li class="nav-item mb-2"><a href="#!" class="nav-link">FAQ</a></li>
+                            <li class="nav-item mb-2"><a href="pages/shop-checkout.html" class="nav-link">Shop Checkout</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-6 col-sm-6 col-md-3">
+                        <h6 class="mb-4">Become a Shopper</h6>
+                        <ul class="nav flex-column">
+                            <li class="nav-item mb-2"><a href="#!" class="nav-link">Shopper Opportunities</a></li>
+                            <li class="nav-item mb-2"><a href="#!" class="nav-link">Become a Shopper</a></li>
+                            <li class="nav-item mb-2"><a href="#!" class="nav-link">Earnings</a></li>
+                            <li class="nav-item mb-2"><a href="#!" class="nav-link">Ideas & Guides</a></li>
+                            <li class="nav-item mb-2"><a href="#!" class="nav-link">New Retailers</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-6 col-sm-6 col-md-3">
+                        <h6 class="mb-4">Freshcart programs</h6>
+                        <ul class="nav flex-column">
+                            <li class="nav-item mb-2"><a href="#!" class="nav-link">Freshcart programs</a></li>
+                            <li class="nav-item mb-2"><a href="#!" class="nav-link">Gift Cards</a></li>
+                            <li class="nav-item mb-2"><a href="#!" class="nav-link">Promos & Coupons</a></li>
+                            <li class="nav-item mb-2"><a href="#!" class="nav-link">Freshcart Ads</a></li>
+                            <li class="nav-item mb-2"><a href="#!" class="nav-link">Careers</a></li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
-    </footer>
+        <div class="border-top py-4">
+            <div class="row align-items-center">
+                <div class="col-lg-5 text-lg-start text-center mb-2 mb-lg-0">
+                    <ul class="list-inline mb-0">
+                        <li class="list-inline-item text-dark">Payment Partners</li>
+                        <li class="list-inline-item">
+                            <a href="#!"><img src="../assets/images/payment/amazonpay.svg" alt="" /></a>
+                        </li>
+                        <li class="list-inline-item">
+                            <a href="#!"><img src="../assets/images/payment/american-express.svg" alt="" /></a>
+                        </li>
+                        <li class="list-inline-item">
+                            <a href="#!"><img src="../assets/images/payment/mastercard.svg" alt="" /></a>
+                        </li>
+                        <li class="list-inline-item">
+                            <a href="#!"><img src="../assets/images/payment/paypal.svg" alt="" /></a>
+                        </li>
+                        <li class="list-inline-item">
+                            <a href="#!"><img src="../assets/images/payment/visa.svg" alt="" /></a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-lg-7 mt-4 mt-md-0">
+                    <ul class="list-inline mb-0 text-lg-end text-center">
+                        <li class="list-inline-item mb-2 mb-md-0 text-dark">Get deliveries with FreshCart</li>
+                        <li class="list-inline-item ms-4">
+                            <a href="#!"><img src="../assets/images/appbutton/appstore-btn.svg" alt="" style="width: 140px" /></a>
+                        </li>
+                        <li class="list-inline-item">
+                            <a href="#!"><img src="../assets/images/appbutton/googleplay-btn.svg" alt="" style="width: 140px" /></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="border-top py-4">
+            <div class="row align-items-center">
+                <div class="col-md-6"><span class="small text-muted">© 2022 <span id="copyright"> - <script>
+                                document.getElementById('copyright').appendChild(document.createTextNode(new Date().getFullYear()))
+                            </script></span> FreshCart. All rights reserved. Powered by <a href="https://codescandy.com/">Codescandy</a>.</span></div>
+                <div class="col-md-6">
+                    <ul class="list-inline text-md-end mb-0 small text-muted">
+                        <li class="list-inline-item">
+                            <a href="#!" class="text-reset">Terms of Service</a>
+                        </li>
+                        <li class="list-inline-item">
+                            <a href="#!" class="text-reset">Privacy Policy</a>
+                        </li>
+                        <li class="list-inline-item">
+                            <a href="#!" class="text-reset">Security</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../assets/libs/jquery/dist/jquery.min.js"></script>
+<script src="../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../assets/libs/simplebar/dist/simplebar.min.js"></script>
+
+<script src="../assets/js/theme.min.js"></script>
+<script src="../assets/libs/slick-carousel/slick/slick.min.js"></script>
+<script src="../assets/js/vendors/slick-slider.js"></script>
+<script src="../assets/libs/tiny-slider/dist/min/tiny-slider.js"></script>
+<script src="../assets/js/vendors/tns-slider.js"></script>
+<script src="../assets/js/vendors/zoom.js"></script>
+
 </body>
+
 </html>

@@ -106,6 +106,14 @@
     <?php else : ?>
         <div class="text-center p-5">
             <p>Giỏ hàng của ní đang trống trơn!</p>
+            <?php if (isset($_SESSION['cart_error'])): ?>
+                <div class="alert alert-danger" role="alert">
+                    <h5 class="alert-heading">Không thể đặt hàng!</h5>
+                    <p><?= $_SESSION['cart_error'] ?></p>
+                </div>
+                <?php unset($_SESSION['cart_error']); // Xóa thông báo sau khi hiển thị 
+                ?>
+            <?php endif; ?>
             <a href="index.php" class="btn btn-primary">Tiếp tục mua sắm</a>
         </div>
     <?php endif; ?>

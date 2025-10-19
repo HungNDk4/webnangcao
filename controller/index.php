@@ -28,7 +28,7 @@ $cat_model_for_menu = new category();
 $danhmuc_for_menu = $cat_model_for_menu->getAllCategories();
 // QUY TẮC 3: HIỂN THỊ GIAO DIỆN
 include_once '../view/header.php';
-include_once '../view/menu.php';
+// include_once '../view/menu.php';
 
 // Khởi tạo giỏ hàng nếu chưa có
 if (!isset($_SESSION["giohang"])) $_SESSION["giohang"] = [];
@@ -288,7 +288,29 @@ switch ($act) {
         break;
     case 'place_order':
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_SESSION['cart']) && !empty($_SESSION['cart'])) {
-            // Lấy thông tin
+
+            // ===== BẮT ĐẦU KIỂM TRA TỒN KHO =====
+            $prod_model_check = new product();
+            $errors = [];
+            foreach ($_SESSION['cart'] as $product_id => $item) {
+                $product_in_db = $prod_model_check->getProductById($product_id);
+                if ($product_in_db['quantity'] < $item['quantity']) {
+                    // Nếu số lượng tồn kho ít hơn số lượng trong giỏ
+                    $errors[] = "Sản phẩm '<b>" . htmlspecialchars($item['name']) . "</b>' chỉ còn " . $product_in_db['quantity'] . " sản phẩm. Vui lòng cập nhật lại giỏ hàng của bạn.";
+                }
+            }
+
+            // Nếu có lỗi, quay lại giỏ hàng và thông báo
+            if (!empty($errors)) {
+                $_SESSION['cart_error'] = implode("<br>", $errors);
+                session_write_close(); // Buộc máy chủ lưu session ngay lập tức
+                header('Location: index.php?act=view_cart');
+                exit();
+            }
+            // ===== KẾT THÚC KIỂM TRA TỒN KHO =====
+
+
+            // Lấy thông tin (đoạn này giữ nguyên)
             $fullname = $_POST['fullname'];
             $email = $_POST['email'];
             $phone_number = $_POST['phone_number'];
