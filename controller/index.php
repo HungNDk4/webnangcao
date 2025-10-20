@@ -689,8 +689,9 @@ switch ($act) {
             $user_model = new user();
             // SỬA LẠI HÀM GỌI:
             $list_users = $user_model->getAllCustomers();
-            include '../view/header.php';
-            include '../view/admin_users.php';
+            include '../view/admin_header.php';
+            include '../view/admin_users.php'; // File này sẽ được cập nhật ở bước sau
+            include '../view/admin_footer.php';
         } else {
             echo "Bạn không có quyền truy cập trang này!";
         }
@@ -720,8 +721,9 @@ switch ($act) {
         if (isset($_SESSION['user']) && $_SESSION['user']->getRole() === 'admin') {
             $user_model = new user();
             $list_staff = $user_model->getAllStaff();
-            include '../view/header.php';
-            include '../view/admin_staff.php';
+            include '../view/admin_header.php';
+            include '../view/admin_staff.php'; // File này sẽ được cập nhật ở bước sau
+            include '../view/admin_footer.php';
         } else {
 
             echo 'bạn không có quyền truy câp';

@@ -65,6 +65,14 @@
                             </a>
                         </li>
                         <li class="nav-item mt-2">
+                            <a class="nav-link" href="index.php?act=admin_staff">
+                                <div class="d-flex align-items-center">
+                                    <span class="nav-link-icon"><i class="bi bi-file-person"></i></span>
+                                    <span class="nav-link-text">Nhân viên</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="nav-item mt-2">
                             <a class="nav-link" href="index.php?act=admin_vouchers">
                                 <div class="d-flex align-items-center">
                                     <span class="nav-link-icon"><i class="bi bi-ticket-detailed"></i></span>
