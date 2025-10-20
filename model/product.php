@@ -170,4 +170,13 @@ class product
         $params = [$category_id];
         return $xl->readitem($sql, $params);
     }
+
+    public function getSaleProducts($limit = 10)
+    {
+        $xl = new xl_data();
+        // Lấy các sản phẩm có sale_price > 0 và còn hàng, giới hạn số lượng, xếp theo mới nhất
+        $sql = "SELECT * FROM products WHERE sale_price IS NOT NULL AND sale_price > 0 AND quantity > 0 ORDER BY id DESC LIMIT ?";
+        $params = [$limit];
+        return $xl->readitem($sql, $params);
+    }
 }

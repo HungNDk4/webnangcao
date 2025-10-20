@@ -202,7 +202,7 @@
                                         <ul class="dropdown-menu">
                                             <li><a class="dropdown-item" href="index.php?act=admin_dashboard">Thống kê</a></li>
                                             <li><a class="dropdown-item" href="index.php?act=hienthidm">Quản lý Danh mục</a></li>
-                                            <li><a class="dropdown-item" href="index.php?act=hienthi_sp">Quản lý Sản phẩm</a></li>
+                                            <li><a class="dropdown-item" href="index.php?act=admin_products">Quản lý Sản phẩm</a></li>
                                             <li><a class="dropdown-item" href="index.php?act=admin_orders">Quản lý Đơn hàng</a></li>
                                             <li><a class="dropdown-item" href="index.php?act=admin_users">Quản lý Khách hàng</a></li>
                                             <li><a class="dropdown-item" href="index.php?act=admin_staff">Quản lý Nhân viên</a></li>

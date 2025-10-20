@@ -27,7 +27,7 @@ session_start();
 $cat_model_for_menu = new category();
 $danhmuc_for_menu = $cat_model_for_menu->getAllCategories();
 // QUY TẮC 3: HIỂN THỊ GIAO DIỆN
-include_once '../view/header.php';
+// include_once '../view/header.php';
 // include_once '../view/menu.php';
 
 // Khởi tạo giỏ hàng nếu chưa có
@@ -42,12 +42,19 @@ $act = $_REQUEST['act'] ?? 'trangchu';
 
 // Dùng switch-case để điều hướng
 switch ($act) {
+
     case 'trangchu':
     default:
         $prod_model = new product();
+        // Lấy tất cả sản phẩm cho khu vực "Sản phẩm nổi bật"
         $danhsach = $prod_model->getAllProducts();
+
+        // === THÊM MỚI: Lấy sản phẩm khuyến mãi ===
+        $sanpham_khuyenmai = $prod_model->getSaleProducts(10); // Lấy 10 sản phẩm
+        include '../view/header.php';
         include '../view/trangchu.php';
         break;
+
     case 'products_by_cat':
         if (isset($_GET['id'])) {
             $category_id = $_GET['id'];
@@ -59,7 +66,7 @@ switch ($act) {
             // Lấy danh sách sản phẩm thuộc danh mục đó
             $prod_model = new product();
             $danhsach = $prod_model->getProductsByCategoryId($category_id);
-
+            include '../view/header.php';
             include '../view/products_by_cat.php';
         } else {
             // Nếu không có id, quay về trang chủ
@@ -69,9 +76,11 @@ switch ($act) {
         break;
     // ============== USER ==============
     case 'register':
+        include '../view/header.php';
         include '../view/register.php';
         break;
     case 'login':
+        include '../view/header.php';
         include '../view/login.php';
         break;
     case 'logout':
@@ -121,10 +130,12 @@ switch ($act) {
         break;
 
     // ============== CRUD DANH MỤC ==============
-    case 'hienthidm':
+    case 'admin_danhmuc':
         $cat_model = new category();
         $danhmuc = $cat_model->getAllCategories();
-        include '../view/danhmuc.php';
+        include '../view/admin_header.php';
+        include '../view/admin_danhmuc.php'; // File này sẽ được cập nhật ở bước sau
+        include '../view/admin_footer.php';
         break;
     case 'themdm':
         $newCat = new category();
@@ -141,6 +152,7 @@ switch ($act) {
     case 'editdm':
         $cat_model = new category();
         $danhmuc_edit = $cat_model->getCategoryById($_GET['id']);
+        include '../view/header.php';
         include '../view/edit_danhmuc.php';
         break;
     case 'xl_editdm':
@@ -158,8 +170,11 @@ switch ($act) {
         $danhmuc = $cat_model->getAllCategories();
         $prod_model = new product();
         $danhsach = $prod_model->getAllProducts();
-        include '../view/sanpham.php';
+        include '../view/header.php';
+        include '../view/shop.php';
         break;
+
+
     case "xl_themsp":
         $prod = new product();
         $prod->setName($_POST["name"]);
@@ -190,6 +205,7 @@ switch ($act) {
         $danhmuc = $cat_model->getAllCategories();
         $prod_model = new product();
         $sanpham_edit = $prod_model->getProductById($_GET['id']);
+        include '../view/header.php';
         include '../view/edit_sanpham.php';
         break;
     case 'xl_editsp':
@@ -217,17 +233,20 @@ switch ($act) {
 
         // ============== GIỎ HÀNG ==============
     case 'view_cart':
+        include '../view/header.php';
         include '../view/cart.php';
         break;
     case 'add_to_cart':
+        // include_once '../view/header.php';
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $id = $_POST['id'];
             $name = $_POST['name'];
             $price = $_POST['price'];
-            $sale_price = $_POST['sale_price']; // Lấy sale_price từ form
+            // Sửa ở đây: Nếu sale_price không được gửi lên, mặc định nó bằng 0
+            $sale_price = $_POST['sale_price'] ?? 0;
             $image = $_POST['image'];
 
-            // Ưu tiên lấy giá khuyến mãi nếu có
+            // Logic này giờ đây đã an toàn
             $final_price = ($sale_price > 0) ? $sale_price : $price;
 
             if (isset($_SESSION['cart'][$id])) {
@@ -235,13 +254,14 @@ switch ($act) {
             } else {
                 $_SESSION['cart'][$id] = [
                     'name' => $name,
-                    'price' => $final_price, // Lưu giá cuối cùng vào giỏ
+                    'price' => $final_price,
                     'image' => $image,
                     'quantity' => 1
                 ];
             }
         }
-        header('Location: index.php');
+        // Chuyển hướng người dùng quay lại đúng trang họ vừa thao tác
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
         exit();
 
 
@@ -279,10 +299,12 @@ switch ($act) {
         // Kiểm tra xem người dùng đã đăng nhập chưa
         if (isset($_SESSION['user'])) {
             // Nếu đã đăng nhập, chuyển đến trang thanh toán
+            include '../view/header.php';
             include '../view/checkout.php';
         } else {
             // Nếu chưa, yêu cầu họ đăng nhập
             echo "<script>alert('Vui lòng đăng nhập để tiến hành thanh toán!');</script>";
+            include '../view/header.php';
             include '../view/login.php';
         }
         break;
@@ -462,6 +484,7 @@ switch ($act) {
 
     // THÊM CASE MỚI ĐỂ HIỂN THỊ THÔNG BÁO
     case 'order_success':
+        include '../view/header.php';
         include '../view/order_success.php';
         break;
 
@@ -473,10 +496,12 @@ switch ($act) {
             $order_model = new order();
             $list_orders = $order_model->getOrdersByUserId($user_id);
 
+            include '../view/header.php';
             include '../view/order_history.php';
         } else {
             // Nếu chưa đăng nhập, yêu cầu đăng nhập
             echo "<script>alert('Vui lòng đăng nhập để xem lịch sử mua hàng!');</script>";
+            include '../view/header.php';
             include '../view/login.php';
         }
         break;
@@ -493,6 +518,7 @@ switch ($act) {
             if ($order_info && $order_info['user_id'] == $user_id) {
                 // Lấy danh sách sản phẩm của đơn hàng
                 $order_details = $order_model->getOrderDetailsByOrderId($order_id);
+                include '../view/header.php';
                 include '../view/order_detail.php';
             } else {
                 // Nếu không phải, báo lỗi hoặc chuyển về trang lịch sử
@@ -547,7 +573,8 @@ switch ($act) {
         if (isset($_SESSION['user']) && $_SESSION['user']->getRole() === 'admin') {
             $filter = $_GET['filter'] ?? 'all';
             $title = 'Thống kê tổng quan';
-
+            $order_model = new order();
+            $recent_orders = $order_model->getNewOrders(8); // Lấy 8 đơn hàng mới nhất
             // Tính toán khoảng ngày
             switch ($filter) {
                 case 'today':
@@ -586,7 +613,25 @@ switch ($act) {
             $least_sell = $stat_model->getLeastSellingProducts($start_date, $end_date); // Thêm dòng này
             $top_inventory = $stat_model->getTopInventoryProducts(); // Thêm dòng này
 
+            include '../view/admin_header.php';
             include '../view/admin_dashboard.php';
+            // include '../view/admin_footer.php';
+        } else {
+            echo "Bạn không có quyền truy cập!";
+        }
+        break;
+    case 'admin_sanpham':
+        if (isset($_SESSION['user']) && $_SESSION['user']->getRole() === 'admin') {
+            $cat_model = new category();
+            $danhmuc = $cat_model->getAllCategories();
+            $prod_model = new product();
+            $danhsach = $prod_model->getAllProducts();
+
+            // THAY THẾ CÁC DÒNG INCLUDE CŨ
+            include '../view/admin_header.php';
+            // Sửa tên file view để tránh nhầm lẫn (bước sau)
+            include '../view/admin_sanpham.php';
+            include '../view/admin_footer.php';
         } else {
             echo "Bạn không có quyền truy cập!";
         }
@@ -597,7 +642,9 @@ switch ($act) {
         if (isset($_SESSION['user']) && $_SESSION['user']->getRole() === 'admin') {
             $order_model = new order();
             $list_orders = $order_model->getAllOrders();
-            include '../view/admin_orders.php';
+            include '../view/admin_header.php';
+            include '../view/admin_orders.php'; // File này sẽ được cập nhật ở bước sau
+            include '../view/admin_footer.php';
         } else {
             echo "Bạn không có quyền truy cập trang này!";
             // Hoặc chuyển hướng về trang chủ
@@ -642,6 +689,7 @@ switch ($act) {
             $user_model = new user();
             // SỬA LẠI HÀM GỌI:
             $list_users = $user_model->getAllCustomers();
+            include '../view/header.php';
             include '../view/admin_users.php';
         } else {
             echo "Bạn không có quyền truy cập trang này!";
@@ -672,6 +720,7 @@ switch ($act) {
         if (isset($_SESSION['user']) && $_SESSION['user']->getRole() === 'admin') {
             $user_model = new user();
             $list_staff = $user_model->getAllStaff();
+            include '../view/header.php';
             include '../view/admin_staff.php';
         } else {
 
@@ -731,6 +780,7 @@ switch ($act) {
             $search_results = $prod_model->searchProducts($keyword);
 
             // Truyền từ khóa và kết quả ra view
+            include '../view/header.php';
             include '../view/search_results.php';
         } else {
             // Nếu không phải tìm kiếm, quay về trang chủ
@@ -764,6 +814,7 @@ switch ($act) {
             }
             // ---- KẾT THÚC LOGIC ----
 
+            include '../view/header.php';
             include '../view/product_detail.php';
         } else {
             header('Location: index.php');
@@ -776,6 +827,7 @@ switch ($act) {
         if (isset($_SESSION['user']) && $_SESSION['user']->getRole() === 'admin') {
             $review_model = new review();
             $list_reviews = $review_model->getAllReviews();
+            include '../view/header.php';
             include '../view/admin_reviews.php';
         } else {
             echo "Bạn không có quyền truy cập!";
@@ -821,6 +873,7 @@ switch ($act) {
         if (isset($_SESSION['user']) && $_SESSION['user']->getRole() === 'admin') {
             $voucher_model = new voucher();
             $list_vouchers = $voucher_model->getAllVouchers();
+            include '../view/header.php';
             include '../view/admin_vouchers.php';
         } else {
             echo "Bạn không có quyền truy cập!";
@@ -897,6 +950,7 @@ switch ($act) {
             $id = $_GET['id'];
             $voucher_model = new voucher();
             $voucher_edit = $voucher_model->getVoucherById($id);
+            include '../view/header.php';
             include '../view/edit_voucher.php';
         } else {
             echo "Bạn không có quyền truy cập!";
@@ -923,4 +977,4 @@ switch ($act) {
         break;
 }
 // Cuối cùng, hiển thị footer
-include_once '../view/footer.php';
+// include_once '../view/footer.php';

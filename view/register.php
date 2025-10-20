@@ -1,33 +1,34 @@
-<main class="container py-5">
-    <div class="row">
-        <div class="col-md-6 mx-auto">
-            <div class="card shadow-sm">
-                <div class="card-header bg-primary text-white">
-                    <h4 class="mb-0">Đăng Ký Tài Khoản</h4>
+<section class="my-lg-14 my-8">
+    <div class="container">
+        <div class="row justify-content-center align-items-center">
+            <div class="col-12 col-md-6 col-lg-4 order-lg-1 order-2">
+                <img src="../assets/images/svg-graphics/signup-g.svg" alt="" class="img-fluid">
+            </div>
+            <div class="col-12 col-md-6 offset-lg-1 col-lg-4 order-lg-2 order-1">
+                <div class="mb-lg-9 mb-5">
+                    <h1 class="mb-1 h2 fw-bold">Tạo tài khoản mới</h1>
+                    <p>Đã có tài khoản? <a href="index.php?act=login">Đăng nhập</a></p>
                 </div>
-                <div class="card-body">
-                    <form action="index.php?act=xl_register" method="post">
-                        <div class="mb-3">
-                            <label for="fullname" class="form-label">Họ và Tên</label>
-                            <input type="text" name="fullname" class="form-control" id="fullname" required>
+                <form action="index.php?act=xl_register" method="post">
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <input type="text" class="form-control" name="fullname" placeholder="Họ và tên" required>
                         </div>
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email</label>
-                            <input type="email" name="email" class="form-control" id="email" required>
+                        <div class="col-12">
+                            <input type="email" class="form-control" name="email" placeholder="Email" required>
                         </div>
-                        <div class="mb-3">
-                            <label for="password" class="form-label">Mật khẩu</label>
-                            <input type="password" name="password" class="form-control" id="password" required>
+                        <div class="col-12">
+                            <input type="password" class="form-control" name="password" placeholder="Mật khẩu" required>
                         </div>
-                        <div class="mb-3">
-                            <label for="repassword" class="form-label">Nhập Lại Mật khẩu</label>
-                            <input type="password" name="repassword" class="form-control" id="repassword" required>
+                        <div class="col-12">
+                            <input type="password" class="form-control" name="repassword" placeholder="Nhập lại mật khẩu" required>
                         </div>
-
-                        <button type="submit" class="btn btn-primary w-100">Đăng Ký</button>
-                    </form>
-                </div>
+                        <div class="col-12 d-grid">
+                            <button type="submit" class="btn btn-primary">Đăng ký</button>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
-</main>
+</section>

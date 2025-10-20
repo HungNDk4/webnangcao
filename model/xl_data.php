@@ -6,10 +6,28 @@ class xl_data extends database
     function readitem($sql, $params = [])
     {
         $stmt = $this->connection_database()->prepare($sql);
-        $stmt->execute($params);
+
+        // --- THAY ĐỔI BẮT ĐẦU TỪ ĐÂY ---
+        if (!empty($params)) {
+            $i = 1;
+            foreach ($params as $param) {
+                // Tự động xác định kiểu dữ liệu của tham số
+                if (is_int($param)) {
+                    $stmt->bindValue($i, $param, PDO::PARAM_INT);
+                } else {
+                    $stmt->bindValue($i, $param, PDO::PARAM_STR);
+                }
+                $i++;
+            }
+        }
+
+        $stmt->execute();
+        // --- THAY ĐỔI KẾT THÚC TẠI ĐÂY ---
+
         $danhsach = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $danhsach;
     }
+
 
     // hàm thực thi (thêm, xóa, sửa) an toàn với tham số
     function execute_item($sql, $params = [])

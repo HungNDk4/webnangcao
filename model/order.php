@@ -104,4 +104,11 @@ class order
         // Nếu số lượng kết quả > 0, tức là họ đã mua.
         return $result[0]['COUNT(*)'] > 0;
     }
+    public function getNewOrders($limit = 8)
+    {
+        $xl_data = new xl_data();
+        $sql = "SELECT * FROM orders ORDER BY created_at DESC LIMIT ?";
+        $params = [$limit];
+        return $xl_data->readitem($sql, $params);
+    }
 }

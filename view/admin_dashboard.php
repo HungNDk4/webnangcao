@@ -1,132 +1,111 @@
-<main class="container py-5">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2><?= $title ?? 'Bảng Điều Khiển' ?></h2>
-        <div>
-            <a href="index.php?act=admin_dashboard&filter=today" class="btn btn-outline-secondary">Hôm nay</a>
-            <a href="index.php?act=admin_dashboard&filter=week" class="btn btn-outline-secondary">7 ngày</a>
-            <a href="index.php?act=admin_dashboard&filter=month" class="btn btn-outline-secondary">Tháng này</a>
-            <a href="index.php?act=admin_dashboard&filter=year" class="btn btn-outline-secondary">Năm nay</a>
-            <a href="index.php?act=admin_dashboard&filter=all" class="btn btn-outline-secondary">Tất cả</a>
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-12">
+        <div class="border-bottom pb-4 mb-4 d-md-flex justify-content-between align-items-center">
+            <div class="mb-3 mb-md-0">
+                <h1 class="mb-1 h2 fw-bold"><?= $title ?? 'Bảng Điều Khiển' ?></h1>
+            </div>
+            <div class="d-flex">
+                <a href="index.php?act=admin_dashboard&filter=today" class="btn btn-outline-secondary">Hôm nay</a>
+                <a href="index.php?act=admin_dashboard&filter=week" class="btn btn-outline-secondary ms-2">7 ngày</a>
+                <a href="index.php?act=admin_dashboard&filter=month" class="btn btn-outline-secondary ms-2">Tháng này</a>
+                <a href="index.php?act=admin_dashboard&filter=year" class="btn btn-outline-secondary ms-2">Năm nay</a>
+                <a href="index.php?act=admin_dashboard&filter=all" class="btn btn-outline-secondary ms-2">Tất cả</a>
+            </div>
         </div>
     </div>
-
-    <div class="row">
-        <div class="col-md-4">
-            <div class="card text-white bg-success mb-3 shadow-sm">
-                <div class="card-header fs-5">Doanh Thu (Hoàn thành)</div>
-                <div class="card-body">
-                    <h4 class="card-title"><?= number_format($total_revenue ?? 0) ?> VNĐ</h4>
+</div>
+<div class="row">
+    <div class="col-xl-4 col-lg-6 col-md-12 col-12 mb-6">
+        <div class="card h-100 card-lg">
+            <div class="card-body p-6">
+                <div class="d-flex justify-content-between align-items-center mb-6">
+                    <div>
+                        <h4 class="mb-0 fs-5">Doanh thu</h4>
+                    </div>
+                    <div class="icon-shape icon-md bg-light-danger text-dark-danger rounded-circle"><i class="fa-solid fa-sack-dollar fs-5"></i></div>
                 </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card text-white bg-primary mb-3 shadow-sm">
-                <div class="card-header fs-5">Tổng Đơn Hàng</div>
-                <div class="card-body">
-                    <h4 class="card-title"><?= $total_orders ?? 0 ?></h4>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card text-white bg-warning mb-3 shadow-sm">
-                <div class="card-header fs-5">Khách Hàng Mới</div>
-                <div class="card-body">
-                    <h4 class="card-title"><?= $total_customers ?? 0 ?></h4>
+                <div class="lh-1">
+                    <h1 class="mb-2 fw-bold fs-2"><?= number_format($total_revenue ?? 0) ?> đ</h1>
+                    <span>Đơn hàng đã hoàn thành</span>
                 </div>
             </div>
         </div>
     </div>
-
-    <hr class="my-5">
-
-    <div class="row">
-        <div class="col-md-6 mb-4">
-            <div class="card shadow-sm h-100">
-                <div class="card-header">
-                    <h5>Top 5 Sản phẩm Bán chạy nhất</h5>
+    <div class="col-xl-4 col-lg-6 col-md-12 col-12 mb-6">
+        <div class="card h-100 card-lg">
+            <div class="card-body p-6">
+                <div class="d-flex justify-content-between align-items-center mb-6">
+                    <div>
+                        <h4 class="mb-0 fs-5">Tổng đơn hàng</h4>
+                    </div>
+                    <div class="icon-shape icon-md bg-light-primary text-dark-primary rounded-circle"><i class="fa-solid fa-box fs-5"></i></div>
                 </div>
-                <div class="card-body">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Sản phẩm</th>
-                                <th class="text-end">Đã bán</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php if (isset($top_sell) && !empty($top_sell)): foreach ($top_sell as $product): ?>
-                                    <tr>
-                                        <td><img src="../view/image/<?= $product['image'] ?>" width="40" class="me-2 img-thumbnail"><?= $product['name'] ?></td>
-                                        <td class="text-end fw-bold"><?= $product['total_sold'] ?></td>
-                                    </tr>
-                                <?php endforeach;
-                            else: ?>
-                                <tr>
-                                    <td colspan="2" class="text-center">Không có dữ liệu.</td>
-                                </tr>
-                            <?php endif; ?>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6 mb-4">
-            <div class="card shadow-sm h-100">
-                <div class="card-header">
-                    <h5>5 Sản phẩm Bán ế nhất</h5>
-                </div>
-                <div class="card-body">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Sản phẩm</th>
-                                <th class="text-end">Đã bán</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php if (isset($least_sell) && !empty($least_sell)): foreach ($least_sell as $product): ?>
-                                    <tr>
-                                        <td><img src="../view/image/<?= $product['image'] ?>" width="40" class="me-2 img-thumbnail"><?= $product['name'] ?></td>
-                                        <td class="text-end fw-bold"><?= $product['total_sold'] ?></td>
-                                    </tr>
-                                <?php endforeach;
-                            else: ?>
-                                <tr>
-                                    <td colspan="2" class="text-center">Không có dữ liệu.</td>
-                                </tr>
-                            <?php endif; ?>
-                        </tbody>
-                    </table>
+                <div class="lh-1">
+                    <h1 class="mb-2 fw-bold fs-2"><?= $total_orders ?? 0 ?></h1>
+                    <span>Tất cả trạng thái</span>
                 </div>
             </div>
         </div>
     </div>
-
-    <div class="row mt-4">
-        <div class="col-md-12">
-            <div class="card shadow-sm">
-                <div class="card-header">
-                    <h5>Top 5 Sản phẩm Tồn kho nhiều nhất</h5>
+    <div class="col-xl-4 col-lg-6 col-md-12 col-12 mb-6">
+        <div class="card h-100 card-lg">
+            <div class="card-body p-6">
+                <div class="d-flex justify-content-between align-items-center mb-6">
+                    <div>
+                        <h4 class="mb-0 fs-5">Khách hàng mới</h4>
+                    </div>
+                    <div class="icon-shape icon-md bg-light-warning text-dark-warning rounded-circle"><i class="fa-solid fa-users fs-5"></i></div>
                 </div>
-                <div class="card-body">
-                    <table class="table">
-                        <thead>
+                <div class="lh-1">
+                    <h1 class="mb-2 fw-bold fs-2"><?= $total_customers ?? 0 ?></h1>
+                    <span>Trong khoảng thời gian đã chọn</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xl-8 col-lg-12 col-md-12 col-12 mb-6">
+        <div class="card h-100">
+            <div class="card-header">
+                <h4 class="mb-0">Đơn hàng gần đây</h4>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover text-nowrap">
+                        <thead class="table-light">
                             <tr>
-                                <th>Sản phẩm</th>
-                                <th class="text-end">Số lượng tồn</th>
+                                <th>Mã ĐH</th>
+                                <th>Khách hàng</th>
+                                <th>Ngày đặt</th>
+                                <th>Tổng tiền</th>
+                                <th>Trạng thái</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <?php if (isset($top_inventory) && !empty($top_inventory)): foreach ($top_inventory as $product): ?>
+                            <?php if (isset($recent_orders) && !empty($recent_orders)): foreach ($recent_orders as $order): ?>
                                     <tr>
-                                        <td><img src="../view/image/<?= $product['image'] ?>" width="40" class="me-2 img-thumbnail"><?= $product['name'] ?></td>
-                                        <td class="text-end fw-bold fs-5"><?= $product['quantity'] ?></td>
+                                        <td><a href="index.php?act=admin_order_detail&id=<?= $order['id'] ?>" class="text-inherit">#<?= $order['id'] ?></a></td>
+                                        <td><?= htmlspecialchars($order['fullname']) ?></td>
+                                        <td><?= date('d/m/Y', strtotime($order['created_at'])) ?></td>
+                                        <td><?= number_format($order['total_money']) ?>đ</td>
+                                        <td>
+                                            <?php
+                                            $status = htmlspecialchars($order['status']);
+                                            $badge_class = 'bg-secondary';
+                                            if ($status == 'completed') $badge_class = 'bg-success';
+                                            elseif ($status == 'shipping') $badge_class = 'bg-info';
+                                            elseif ($status == 'confirmed') $badge_class = 'bg-primary';
+                                            elseif ($status == 'cancelled') $badge_class = 'bg-danger';
+                                            elseif ($status == 'pending') $badge_class = 'bg-warning';
+                                            echo "<span class='badge {$badge_class}'>" . ucfirst($status) . "</span>";
+                                            ?>
+                                        </td>
                                     </tr>
                                 <?php endforeach;
                             else: ?>
                                 <tr>
-                                    <td colspan="2" class="text-center">Không có dữ liệu tồn kho.</td>
+                                    <td colspan="5" class="text-center">Chưa có đơn hàng nào.</td>
                                 </tr>
                             <?php endif; ?>
                         </tbody>
@@ -135,4 +114,33 @@
             </div>
         </div>
     </div>
-</main>
+    <div class="col-xl-4 col-lg-12 col-md-12 col-12 mb-6">
+        <div class="card h-100">
+            <div class="card-header">
+                <h4 class="mb-0">Top sản phẩm bán chạy</h4>
+            </div>
+            <div class="card-body">
+                <table class="table table-hover">
+                    <tbody>
+                        <?php if (isset($top_sell) && !empty($top_sell)): foreach ($top_sell as $product): ?>
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <img src="../view/image/<?= htmlspecialchars($product['image']) ?>" width="40" class="me-3 img-thumbnail rounded">
+                                            <span class="fs-6"><?= htmlspecialchars($product['name']) ?></span>
+                                        </div>
+                                    </td>
+                                    <td class="text-end fw-bold"><?= $product['total_sold'] ?></td>
+                                </tr>
+                            <?php endforeach;
+                        else: ?>
+                            <tr>
+                                <td colspan="2" class="text-center">Không có dữ liệu.</td>
+                            </tr>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
