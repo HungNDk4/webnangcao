@@ -71,11 +71,10 @@ class voucher
 
     public function getAllVouchers()
     {
-        $xl = new xl_data();
-        $sql = "SELECT * FROM vouchers ORDER BY expires_at DESC"; // Sửa ở đây
-        return $xl->readitem($sql);
+        $xl_data = new xl_data();
+        $sql = "SELECT * FROM vouchers ORDER BY id DESC";
+        return $xl_data->readitem($sql);
     }
-
     public function getVoucherById($id)
     {
         $xl = new xl_data();

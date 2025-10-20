@@ -35,15 +35,23 @@ class review
         $params = [$product_id];
         return $xl->readitem($sql, $params);
     }
-    public function getAllReviews()
+    public function getAllReviewsWithProductInfo()
     {
-        $xl = new xl_data();
-        $sql = "SELECT r.id, r.comment, r.rating, r.created_at, u.fullname, p.name AS product_name
-                FROM reviews r
-                JOIN users u ON r.user_id = u.id
-                JOIN products p ON r.product_id = p.id
-                ORDER BY r.created_at DESC";
-        return $xl->readitem($sql);
+        $xl_data = new xl_data();
+        $sql = "SELECT 
+                    r.*, 
+                    u.fullname, 
+                    p.name as product_name,
+                    p.image as product_image
+                FROM 
+                    reviews r
+                JOIN 
+                    users u ON r.user_id = u.id
+                JOIN 
+                    products p ON r.product_id = p.id
+                ORDER BY 
+                    r.created_at DESC";
+        return $xl_data->readitem($sql);
     }
 
     /**

@@ -828,9 +828,10 @@ switch ($act) {
     case 'admin_reviews':
         if (isset($_SESSION['user']) && $_SESSION['user']->getRole() === 'admin') {
             $review_model = new review();
-            $list_reviews = $review_model->getAllReviews();
-            include '../view/header.php';
-            include '../view/admin_reviews.php';
+            $list_reviews = $review_model->getAllReviewsWithProductInfo();
+            include '../view/admin_header.php';
+            include '../view/admin_reviews.php'; // File này sẽ được cập nhật ở bước sau
+            include '../view/admin_footer.php';
         } else {
             echo "Bạn không có quyền truy cập!";
         }

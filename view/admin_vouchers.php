@@ -9,16 +9,13 @@
 </div>
 <div class="row">
     <div class="col-lg-4 col-md-12 col-12">
-        <div class="card">
+        <div class="card mb-4">
             <div class="card-header">
                 <h4 class="mb-0">Thêm Voucher mới</h4>
             </div>
             <div class="card-body">
                 <form action="index.php?act=add_voucher" method="post">
-                    <div class="mb-3">
-                        <label class="form-label">Mã Voucher</label>
-                        <input type="text" class="form-control" name="code" placeholder="VD: SALE50K" required>
-                    </div>
+                    <div class="mb-3"><label class="form-label">Mã Voucher</label><input type="text" class="form-control" name="code" placeholder="VD: SALE50K" required></div>
                     <div class="mb-3">
                         <label class="form-label">Loại giảm giá</label>
                         <select name="discount_type" class="form-select" required>
@@ -26,24 +23,14 @@
                             <option value="fixed">Số tiền cố định (VNĐ)</option>
                         </select>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">Giá trị giảm</label>
-                        <input type="number" class="form-control" name="discount_value" min="0" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Số lượng</label>
-                        <input type="number" class="form-control" name="quantity" min="1" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Ngày hết hạn</label>
-                        <input type="date" class="form-control" name="expiry_date" required>
-                    </div>
+                    <div class="mb-3"><label class="form-label">Giá trị giảm</label><input type="number" class="form-control" name="discount_value" min="0" required></div>
+                    <div class="mb-3"><label class="form-label">Số lượng</label><input type="number" class="form-control" name="quantity" min="1" required></div>
+                    <div class="mb-3"><label class="form-label">Ngày hết hạn</label><input type="date" class="form-control" name="expiry_date" required></div>
                     <button type="submit" class="btn btn-primary">Thêm Voucher</button>
                 </form>
             </div>
         </div>
     </div>
-
     <div class="col-lg-8 col-md-12 col-12">
         <div class="card">
             <div class="card-header">
@@ -51,7 +38,7 @@
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table table-hover text-nowrap">
+                    <table class="table table-hover">
                         <thead class="table-light">
                             <tr>
                                 <th>Mã Code</th>
@@ -76,7 +63,7 @@
                                             <?php endif; ?>
                                         </td>
                                         <td><?= $voucher_item['quantity'] ?></td>
-                                        <td><?= date('d/m/Y', strtotime($voucher_item['expiry_date'])) ?></td>
+                                        <td><?= date('d/m/Y', strtotime($voucher_item['expires_at'])) ?></td>
                                         <td class="text-end">
                                             <a href="index.php?act=edit_voucher&id=<?= $voucher_item['id'] ?>" class="btn btn-warning btn-sm">Sửa</a>
                                             <a href="index.php?act=delete_voucher&id=<?= $voucher_item['id'] ?>" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có chắc muốn xóa voucher này?');">Xóa</a>
