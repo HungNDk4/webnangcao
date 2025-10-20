@@ -875,8 +875,9 @@ switch ($act) {
         if (isset($_SESSION['user']) && $_SESSION['user']->getRole() === 'admin') {
             $voucher_model = new voucher();
             $list_vouchers = $voucher_model->getAllVouchers();
-            include '../view/header.php';
-            include '../view/admin_vouchers.php';
+            include '../view/admin_header.php';
+            include '../view/admin_vouchers.php'; // File này sẽ được cập nhật ở bước sau
+            include '../view/admin_footer.php';
         } else {
             echo "Bạn không có quyền truy cập!";
         }
