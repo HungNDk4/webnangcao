@@ -179,4 +179,26 @@ class product
         $params = [$limit];
         return $xl->readitem($sql, $params);
     }
+    public function countAllProducts()
+    {
+        $xl_data = new xl_data();
+        $sql = "SELECT COUNT(id) as total FROM products";
+        $result = $xl_data->readitem($sql);
+        return $result[0]['total'];
+    }
+
+    /**
+     * Lấy sản phẩm theo từng trang.
+     * @param int $limit Số lượng sản phẩm trên mỗi trang
+     * @param int $offset Vị trí bắt đầu lấy sản phẩm
+     * @return array Mảng chứa các sản phẩm của trang hiện tại
+     */
+    public function getProductsByPage($limit, $offset)
+    {
+        $xl_data = new xl_data();
+        $sql = "SELECT * FROM products ORDER BY id DESC LIMIT ? OFFSET ?";
+        // Lưu ý: PDO cần offset là kiểu int
+        $params = [(int)$limit, (int)$offset];
+        return $xl_data->readitem($sql, $params);
+    }
 }

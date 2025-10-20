@@ -225,4 +225,25 @@ class user
         $params = [$new_rank, $user_id];
         $xl->execute_item($sql, $params);
     }
+    public function countAllCustomers()
+    {
+        $xl_data = new xl_data();
+        $sql = "SELECT COUNT(id) as total FROM users WHERE role = 'customer'";
+        $result = $xl_data->readitem($sql);
+        return $result[0]['total'];
+    }
+
+    /**
+     * Lấy khách hàng theo từng trang.
+     * @param int $limit Số lượng khách hàng trên mỗi trang
+     * @param int $offset Vị trí bắt đầu lấy
+     * @return array Mảng chứa các khách hàng của trang hiện tại
+     */
+    public function getCustomersByPage($limit, $offset)
+    {
+        $xl_data = new xl_data();
+        $sql = "SELECT * FROM users WHERE role = 'customer' ORDER BY id DESC LIMIT ? OFFSET ?";
+        $params = [(int)$limit, (int)$offset];
+        return $xl_data->readitem($sql, $params);
+    }
 }

@@ -100,3 +100,34 @@
         </div>
     </div>
 </div>
+
+</div>
+<div class="row mt-8">
+    <div class="col-12">
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                <li class="page-item <?= ($current_page <= 1) ? 'disabled' : '' ?>">
+                    <a class="page-link" href="index.php?act=hienthi_sp&page=<?= $current_page - 1 ?>" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+
+                <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                    <li class="page-item <?= ($i == $current_page) ? 'active' : '' ?>">
+                        <a class="page-link" href="index.php?act=hienthi_sp&page=<?= $i ?>"><?= $i ?></a>
+                    </li>
+                <?php endfor; ?>
+
+                <li class="page-item <?= ($current_page >= $total_pages) ? 'disabled' : '' ?>">
+                    <a class="page-link" href="index.php?act=hienthi_sp&page=<?= $current_page + 1 ?>" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+</section>
+</div>
+</div>
+</div>

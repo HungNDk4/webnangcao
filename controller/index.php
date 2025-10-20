@@ -165,13 +165,36 @@ switch ($act) {
         exit();
 
         // ============== CRUD SẢN PHẨM ==============
-    case "hienthi_sp":
-        $cat_model = new category();
-        $danhmuc = $cat_model->getAllCategories();
+    case 'hienthi_sp':
         $prod_model = new product();
-        $danhsach = $prod_model->getAllProducts();
+
+        // --- BẮT ĐẦU LOGIC PHÂN TRANG ---
+        $products_per_page = 8; // Số sản phẩm bạn muốn hiển thị trên mỗi trang
+
+        // Lấy tổng số sản phẩm
+        $total_products = $prod_model->countAllProducts();
+
+        // Tính tổng số trang
+        $total_pages = ceil($total_products / $products_per_page);
+
+        // Lấy trang hiện tại từ URL, nếu không có thì mặc định là trang 1
+        $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        if ($current_page < 1) {
+            $current_page = 1;
+        } elseif ($current_page > $total_pages) {
+            $current_page = $total_pages;
+        }
+
+        // Tính vị trí bắt đầu (offset)
+        $offset = ($current_page - 1) * $products_per_page;
+
+        // Lấy sản phẩm cho trang hiện tại
+        $danhsach = $prod_model->getProductsByPage($products_per_page, $offset);
+        // --- KẾT THÚC LOGIC PHÂN TRANG ---
+
         include '../view/header.php';
-        include '../view/shop.php';
+        include '../view/shop.php'; // Sử dụng file view shop.php
+        include '../view/footer.php';
         break;
 
 
@@ -625,11 +648,27 @@ switch ($act) {
             $cat_model = new category();
             $danhmuc = $cat_model->getAllCategories();
             $prod_model = new product();
-            $danhsach = $prod_model->getAllProducts();
 
-            // THAY THẾ CÁC DÒNG INCLUDE CŨ
+            // --- BẮT ĐẦU LOGIC PHÂN TRANG ---
+            $products_per_page = 5; // Hiển thị 5 sản phẩm trên mỗi trang admin
+
+            $total_products = $prod_model->countAllProducts();
+            $total_pages = ceil($total_products / $products_per_page);
+
+            $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+            if ($current_page < 1) {
+                $current_page = 1;
+            } elseif ($current_page > $total_pages && $total_pages > 0) {
+                $current_page = $total_pages;
+            }
+
+            $offset = ($current_page - 1) * $products_per_page;
+
+            // Lấy sản phẩm cho trang admin hiện tại
+            $danhsach = $prod_model->getProductsByPage($products_per_page, $offset);
+            // --- KẾT THÚC LOGIC PHÂN TRANG ---
+
             include '../view/admin_header.php';
-            // Sửa tên file view để tránh nhầm lẫn (bước sau)
             include '../view/admin_sanpham.php';
             include '../view/admin_footer.php';
         } else {
@@ -638,17 +677,33 @@ switch ($act) {
         break;
 
     case 'admin_orders':
-        // Kiểm tra xem có phải admin không
         if (isset($_SESSION['user']) && $_SESSION['user']->getRole() === 'admin') {
             $order_model = new order();
-            $list_orders = $order_model->getAllOrders();
+
+            // --- BẮT ĐẦU LOGIC PHÂN TRANG ---
+            $orders_per_page = 10; // Hiển thị 10 đơn hàng trên mỗi trang
+
+            $total_orders = $order_model->countAllOrders();
+            $total_pages = ceil($total_orders / $orders_per_page);
+
+            $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+            if ($current_page < 1) {
+                $current_page = 1;
+            } elseif ($current_page > $total_pages && $total_pages > 0) {
+                $current_page = $total_pages;
+            }
+
+            $offset = ($current_page - 1) * $orders_per_page;
+
+            // Lấy đơn hàng cho trang hiện tại
+            $list_orders = $order_model->getOrdersByPage($orders_per_page, $offset);
+            // --- KẾT THÚC LOGIC PHÂN TRANG ---
+
             include '../view/admin_header.php';
-            include '../view/admin_orders.php'; // File này sẽ được cập nhật ở bước sau
+            include '../view/admin_orders.php';
             include '../view/admin_footer.php';
         } else {
-            echo "Bạn không có quyền truy cập trang này!";
-            // Hoặc chuyển hướng về trang chủ
-            // header('Location: index.php');
+            echo "Bạn không có quyền truy cập!";
         }
         break;
 
@@ -687,33 +742,31 @@ switch ($act) {
     case 'admin_users':
         if (isset($_SESSION['user']) && $_SESSION['user']->getRole() === 'admin') {
             $user_model = new user();
-            // SỬA LẠI HÀM GỌI:
-            $list_users = $user_model->getAllCustomers();
+
+            // --- BẮT ĐẦU LOGIC PHÂN TRANG ---
+            $users_per_page = 10; // Hiển thị 10 khách hàng trên mỗi trang
+
+            $total_users = $user_model->countAllCustomers();
+            $total_pages = ceil($total_users / $users_per_page);
+
+            $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+            if ($current_page < 1) {
+                $current_page = 1;
+            } elseif ($current_page > $total_pages && $total_pages > 0) {
+                $current_page = $total_pages;
+            }
+
+            $offset = ($current_page - 1) * $users_per_page;
+
+            // Lấy khách hàng cho trang hiện tại
+            $list_users = $user_model->getCustomersByPage($users_per_page, $offset);
+            // --- KẾT THÚC LOGIC PHÂN TRANG ---
+
             include '../view/admin_header.php';
-            include '../view/admin_users.php'; // File này sẽ được cập nhật ở bước sau
+            include '../view/admin_users.php';
             include '../view/admin_footer.php';
         } else {
-            echo "Bạn không có quyền truy cập trang này!";
-        }
-        break;
-    case 'toggle_user_status':
-        if (isset($_SESSION['user']) && $_SESSION['user']->getRole() === 'admin') {
-            $user_id = $_GET['id'];
-            $current_status = $_GET['status'];
-            // Lấy trang cần quay về, mặc định là trang khách hàng
-            $return_page = $_GET['return_to'] ?? 'admin_users';
-
-            $new_status = $current_status == 1 ? 0 : 1;
-
-            $user_model = new user();
-            $user_model->updateUserStatus($user_id, $new_status);
-
-            // Điều hướng về đúng trang đã yêu cầu
-            header('Location: index.php?act=' . $return_page);
-            exit();
-        } else {
-            header('Location: index.php');
-            exit();
+            echo "Bạn không có quyền truy cập!";
         }
         break;
 

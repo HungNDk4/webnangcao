@@ -111,4 +111,25 @@ class order
         $params = [$limit];
         return $xl_data->readitem($sql, $params);
     }
+    public function countAllOrders()
+    {
+        $xl_data = new xl_data();
+        $sql = "SELECT COUNT(id) as total FROM orders";
+        $result = $xl_data->readitem($sql);
+        return $result[0]['total'];
+    }
+
+    /**
+     * Lấy đơn hàng theo từng trang.
+     * @param int $limit Số lượng đơn hàng trên mỗi trang
+     * @param int $offset Vị trí bắt đầu lấy
+     * @return array Mảng chứa các đơn hàng của trang hiện tại
+     */
+    public function getOrdersByPage($limit, $offset)
+    {
+        $xl_data = new xl_data();
+        $sql = "SELECT * FROM orders ORDER BY id DESC LIMIT ? OFFSET ?";
+        $params = [(int)$limit, (int)$offset];
+        return $xl_data->readitem($sql, $params);
+    }
 }

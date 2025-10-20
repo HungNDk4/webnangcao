@@ -44,7 +44,7 @@
                                             </form>
                                         </td>
                                         <td class="text-end">
-                                            <a href="index.php?act=admin_order_detail&id=<?= $order['id'] ?>" class="btn btn-info btn-sm">Xem chi tiết</a>
+                                            <a href="index.php?act=order_detail&id=<?= $order['id'] ?>" class="btn btn-info btn-sm">Xem chi tiết</a>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
@@ -56,7 +56,35 @@
                         </tbody>
                     </table>
                 </div>
+                </tbody>
+                </table>
+            </div>
+            <div class="mt-4">
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item <?= ($current_page <= 1) ? 'disabled' : '' ?>">
+                            <a class="page-link" href="index.php?act=admin_orders&page=<?= $current_page - 1 ?>">
+                                <span>&laquo;</span>
+                            </a>
+                        </li>
+                        <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                            <li class="page-item <?= ($i == $current_page) ? 'active' : '' ?>">
+                                <a class="page-link" href="index.php?act=admin_orders&page=<?= $i ?>"><?= $i ?></a>
+                            </li>
+                        <?php endfor; ?>
+                        <li class="page-item <?= ($current_page >= $total_pages) ? 'disabled' : '' ?>">
+                            <a class="page-link" href="index.php?act=admin_orders&page=<?= $current_page + 1 ?>">
+                                <span>&raquo;</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
             </div>
         </div>
     </div>
+</div>
+</div>
+</div>
+</div>
+</div>
 </div>

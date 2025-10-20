@@ -60,6 +60,6 @@
         </div>
     </div>
     <div class="mt-4">
-        <a href="index.php?act=order_history" class="btn btn-secondary">Quay lại Lịch sử mua hàng</a>
+        <a href="#" onclick="history.back(); return false;" class="btn btn-secondary">Quay lại trang trước</a>
     </div>
 </main>
