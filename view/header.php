@@ -70,17 +70,27 @@
                                     <?php if (isset($_SESSION['user'])): ?>
                                         <li><span class="dropdown-item-text">Chào, <?= htmlspecialchars($_SESSION['user']->getFullname()) ?></span></li>
                                         <li>
-                                            <hr class="dropdown-divider">
-                                        </li>
-                                        <li><a class="dropdown-item" href="index.php?act=order_history">Lịch sử mua hàng</a></li>
+                                            <?php if ($_SESSION['user']->getRole() === 'admin'): ?>
                                         <li>
                                             <hr class="dropdown-divider">
                                         </li>
-                                        <li><a class="dropdown-item" href="index.php?act=logout">Đăng xuất</a></li>
-                                    <?php else: ?>
-                                        <li><a class="dropdown-item" href="index.php?act=login">Đăng nhập</a></li>
-                                        <li><a class="dropdown-item" href="index.php?act=register">Đăng ký</a></li>
+                                        <li>
+                                            <h6 class="dropdown-header">Quản lý</h6>
+                                        </li>
+                                        <li><a class="dropdown-item" href="index.php?act=admin_dashboard">Thống kê</a></li>
+
                                     <?php endif; ?>
+                                    <hr class="dropdown-divider">
+                                    </li>
+                                    <li><a class="dropdown-item" href="index.php?act=order_history">Lịch sử mua hàng</a></li>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li><a class="dropdown-item" href="index.php?act=logout">Đăng xuất</a></li>
+                                <?php else: ?>
+                                    <li><a class="dropdown-item" href="index.php?act=login">Đăng nhập</a></li>
+                                    <li><a class="dropdown-item" href="index.php?act=register">Đăng ký</a></li>
+                                <?php endif; ?>
                                 </ul>
                             </div>
                             <div class="list-inline-item me-5 me-lg-0">
@@ -204,28 +214,7 @@
                                         <?php endif; ?>
                                     </ul>
                                 </li> -->
-                                <?php if (isset($_SESSION['user']) && $_SESSION['user']->getRole() === 'admin'): ?>
-                                    <li class="nav-item dropdown">
-                                        <a
-                                            class="nav-link dropdown-toggle"
-                                            href="#"
-                                            role="button"
-                                            data-bs-toggle="dropdown"
-                                            aria-expanded="false">
-                                            Quản lý
-                                        </a>
-                                        <ul class="dropdown-menu">
-                                            <li><a class="dropdown-item" href="index.php?act=admin_dashboard">Thống kê</a></li>
-                                            <li><a class="dropdown-item" href="index.php?act=hienthidm">Quản lý Danh mục</a></li>
-                                            <li><a class="dropdown-item" href="index.php?act=admin_products">Quản lý Sản phẩm</a></li>
-                                            <li><a class="dropdown-item" href="index.php?act=admin_orders">Quản lý Đơn hàng</a></li>
-                                            <li><a class="dropdown-item" href="index.php?act=admin_users">Quản lý Khách hàng</a></li>
-                                            <li><a class="dropdown-item" href="index.php?act=admin_staff">Quản lý Nhân viên</a></li>
-                                            <li><a class="dropdown-item" href="index.php?act=admin_vouchers">Quản lí voucher</a></li>
-                                            <li><a class="dropdown-item" href="index.php?act=admin_reviews">Quản lí đánh giá</a></li>
-                                        </ul>
-                                    </li>
-                                <?php endif; ?>
+
                             </ul>
                         </div>
                     </div>

@@ -18,7 +18,7 @@
                                 <?php if (isset($rc['sale_price']) && $rc['sale_price'] > 0) :
                                     $discount_percentage = round((($rc['price'] - $rc['sale_price']) / $rc['price']) * 100);
                                 ?>
-                                    <div class="text-center position-absolute top-0 start-0">
+                                    <div class="position-absolute top-0 start-0 p-2" style="z-index: 10;">
                                         <span class="badge bg-danger"><?= $discount_percentage ?>%</span>
                                     </div>
                                 <?php endif; ?>
