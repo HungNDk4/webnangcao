@@ -9,8 +9,9 @@
                     <h1 class="mb-1 h2 fw-bold">Đăng nhập</h1>
                     <p>Chưa có tài khoản? <a href="index.php?act=register">Đăng ký ngay</a></p>
                 </div>
-                <form action="index.php?act=xl_login" method="post">
+                <form id="login-form" action="index.php?act=xl_login" method="post">
                     <div class="row g-3">
+                        <div id="login-message" class="alert alert-danger" style="display:none;"></div>
                         <div class="col-12">
                             <input type="email" class="form-control" name="email" placeholder="Email" required>
                         </div>

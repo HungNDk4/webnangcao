@@ -107,4 +107,47 @@
 
 </body>
 
+<script>
+    $(document).ready(function() {
+        // Xử lý form đăng ký
+        $('#register-form').on('submit', function(e) {
+            e.preventDefault(); // Ngăn form gửi đi theo cách thông thường
+            var formData = $(this).serialize();
+            $.ajax({
+                type: 'POST',
+                url: 'index.php?act=xl_register',
+                data: formData,
+                dataType: 'json',
+                success: function(response) {
+                    if (response.success) {
+                        alert(response.message);
+                        window.location.href = 'index.php?act=login';
+                    } else {
+                        $('#register-message').text(response.message).show();
+                    }
+                }
+            });
+        });
+
+        // Xử lý form đăng nhập
+        $('#login-form').on('submit', function(e) {
+            e.preventDefault();
+            var formData = $(this).serialize();
+            $.ajax({
+                type: 'POST',
+                url: 'index.php?act=xl_login',
+                data: formData,
+                dataType: 'json',
+                success: function(response) {
+                    if (response.success) {
+                        window.location.href = 'index.php'; // Chuyển về trang chủ
+                    } else {
+                        $('#login-message').text(response.message).show();
+                    }
+                }
+            });
+        });
+    });
+</script>
+
 </html>
