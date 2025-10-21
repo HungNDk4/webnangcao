@@ -50,8 +50,8 @@
                                 <a href="#" class="text-muted">
                                 </a>
                             </div>
-                            <div class="list-inline-item me-5">
-                                <a href="#!" class="text-muted" data-bs-toggle="modal" data-bs-target="#userModal">
+                            <div class="list-inline-item me-5 dropdown">
+                                <a href="#" class="text-muted dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     <svg
                                         xmlns="http://www.w3.org/2000/svg"
                                         width="20"
@@ -65,8 +65,23 @@
                                         class="feather feather-user">
                                         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                                         <circle cx="12" cy="7" r="4"></circle>
-                                    </svg>
-                                </a>
+                                    </svg> </a>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <?php if (isset($_SESSION['user'])): ?>
+                                        <li><span class="dropdown-item-text">Chào, <?= htmlspecialchars($_SESSION['user']->getFullname()) ?></span></li>
+                                        <li>
+                                            <hr class="dropdown-divider">
+                                        </li>
+                                        <li><a class="dropdown-item" href="index.php?act=order_history">Lịch sử mua hàng</a></li>
+                                        <li>
+                                            <hr class="dropdown-divider">
+                                        </li>
+                                        <li><a class="dropdown-item" href="index.php?act=logout">Đăng xuất</a></li>
+                                    <?php else: ?>
+                                        <li><a class="dropdown-item" href="index.php?act=login">Đăng nhập</a></li>
+                                        <li><a class="dropdown-item" href="index.php?act=register">Đăng ký</a></li>
+                                    <?php endif; ?>
+                                </ul>
                             </div>
                             <div class="list-inline-item me-5 me-lg-0">
                                 <a class="text-muted position-relative" href="index.php?act=view_cart">
@@ -166,7 +181,7 @@
                                         ?>
                                     </ul>
                                 </li>
-                                <li class="nav-item dropdown">
+                                <!-- <li class="nav-item dropdown">
                                     <a
                                         class="nav-link dropdown-toggle"
                                         href="#"
@@ -188,7 +203,7 @@
                                             <li><a class="dropdown-item" href="index.php?act=register">Đăng ký</a></li>
                                         <?php endif; ?>
                                     </ul>
-                                </li>
+                                </li> -->
                                 <?php if (isset($_SESSION['user']) && $_SESSION['user']->getRole() === 'admin'): ?>
                                     <li class="nav-item dropdown">
                                         <a
