@@ -132,4 +132,12 @@ class voucher
         $result = $xl->readitem($sql, $params);
         return $result[0]['COUNT(*)'] > 0;
     }
+    public function decreaseVoucherQuantity($voucher_id)
+    {
+        $xl_data = new xl_data();
+        // Cập nhật số lượng, đảm bảo không bao giờ âm
+        $sql = "UPDATE vouchers SET quantity = GREATEST(0, quantity - 1) WHERE id = ?";
+        $params = [$voucher_id];
+        return $xl_data->execute_item($sql, $params);
+    }
 }

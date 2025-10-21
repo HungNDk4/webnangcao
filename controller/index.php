@@ -53,6 +53,8 @@ switch ($act) {
         $sanpham_khuyenmai = $prod_model->getSaleProducts(10); // Lấy 10 sản phẩm
         include '../view/header.php';
         include '../view/trangchu.php';
+        include_once '../view/footer.php';
+
         break;
 
     case 'products_by_cat':
@@ -68,6 +70,7 @@ switch ($act) {
             $danhsach = $prod_model->getProductsByCategoryId($category_id);
             include '../view/header.php';
             include '../view/products_by_cat.php';
+            include_once '../view/footer.php';
         } else {
             // Nếu không có id, quay về trang chủ
             header('Location: index.php');
@@ -78,10 +81,14 @@ switch ($act) {
     case 'register':
         include '../view/header.php';
         include '../view/register.php';
+        include_once '../view/footer.php';
+
         break;
     case 'login':
         include '../view/header.php';
         include '../view/login.php';
+        include_once '../view/footer.php';
+
         break;
     case 'logout':
         session_unset();
@@ -89,18 +96,20 @@ switch ($act) {
         header('Location: index.php');
         exit();
     case 'xl_register':
-        $fullname = $_POST['fullname'];
-        $email = $_POST['email'];
-        $password = $_POST['password'];
-        $repassword = $_POST['repassword'];
+        header('Content-Type: application/json'); // Báo cho trình duyệt biết đây là JSON
+        $fullname = $_POST['fullname'] ?? '';
+        $email = $_POST['email'] ?? '';
+        $password = $_POST['password'] ?? '';
+        $repassword = $_POST['repassword'] ?? '';
+
         if ($password !== $repassword) {
-            echo "Mật khẩu không khớp!";
-            break;
+            echo json_encode(['success' => false, 'message' => 'Mật khẩu không khớp!']);
+            exit();
         }
         $user_model = new user();
         if ($user_model->checkEmailExists($email)) {
-            echo "Email đã được đăng ký!";
-            break;
+            echo json_encode(['success' => false, 'message' => 'Email đã được đăng ký!']);
+            exit();
         }
 
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
@@ -108,28 +117,32 @@ switch ($act) {
         $newUser->setFullname($fullname);
         $newUser->setEmail($email);
         $newUser->setPassword($hashed_password);
-        // ===== THÊM DÒNG NÀY =====
-        $newUser->setRole('customer'); // Gán vai trò mặc định
+        $newUser->setRole('customer');
         $user_model->addUser($newUser);
-        $controller = new controller();
-        $controller->sendWelcomeEmail($email, $fullname);
-        echo "Đăng ký thành công! Vui lòng kiểm tra email của bạn.";
-        break;
-    case 'xl_login':
-        $email = $_POST['email'];
-        $password = $_POST['password'];
-        $user_model = new user();
-        $user_obj = $user_model->getUserByEmail($email);
-        if ($user_obj && password_verify($password, $user_obj->getPassword())) {
-            $_SESSION['user'] = $user_obj;
-            header('Location: index.php');
-            exit();
-        } else {
-            echo "Email hoặc mật khẩu không đúng!";
-        }
-        break;
 
-    // ============== CRUD DANH MỤC ==============
+        // Gửi email chào mừng (tùy chọn)
+        // $controller = new controller();
+        // $controller->sendWelcomeEmail($email, $fullname);
+
+        echo json_encode(['success' => true, 'message' => 'Đăng ký thành công!']);
+        exit();
+
+    case 'xl_login':
+        header('Content-Type: application/json');
+        $email = $_POST['email'] ?? '';
+        $password = $_POST['password'] ?? '';
+        $user_model = new user();
+        $user_data = $user_model->checkLogin($email, $password);
+
+        if ($user_data) {
+            $_SESSION['user'] = $user_data;
+            echo json_encode(['success' => true, 'message' => 'Đăng nhập thành công!']);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Email hoặc mật khẩu không chính xác.']);
+        }
+        exit();
+
+        // ============== CRUD DANH MỤC ==============
     case 'admin_danhmuc':
         $cat_model = new category();
         $danhmuc = $cat_model->getAllCategories();
@@ -154,6 +167,8 @@ switch ($act) {
         $danhmuc_edit = $cat_model->getCategoryById($_GET['id']);
         include '../view/header.php';
         include '../view/edit_danhmuc.php';
+        include_once '../view/footer.php';
+
         break;
     case 'xl_editdm':
         $updatedCat = new category();
@@ -230,6 +245,8 @@ switch ($act) {
         $sanpham_edit = $prod_model->getProductById($_GET['id']);
         include '../view/header.php';
         include '../view/edit_sanpham.php';
+        include_once '../view/footer.php';
+
         break;
     case 'xl_editsp':
         $prod = new product();
@@ -258,6 +275,8 @@ switch ($act) {
     case 'view_cart':
         include '../view/header.php';
         include '../view/cart.php';
+        include_once '../view/footer.php';
+
         break;
     case 'add_to_cart':
         // include_once '../view/header.php';
@@ -293,21 +312,26 @@ switch ($act) {
     case 'update_cart':
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $id_sp = $_POST['id_sp'];
-            $action = $_POST['action']; // 'increase' hoặc 'decrease'
+            $action = $_POST['action'];
 
             if (isset($_SESSION['cart'][$id_sp])) {
+                $prod_model = new product();
+                $product_in_db = $prod_model->getProductById($id_sp);
+                $stock = $product_in_db['quantity'];
+
                 if ($action == 'increase') {
-                    $_SESSION['cart'][$id_sp]['quantity']++;
+                    // Chỉ tăng nếu số lượng hiện tại < số lượng tồn kho
+                    if ($_SESSION['cart'][$id_sp]['quantity'] < $stock) {
+                        $_SESSION['cart'][$id_sp]['quantity']++;
+                    }
                 } elseif ($action == 'decrease') {
                     $_SESSION['cart'][$id_sp]['quantity']--;
-                    // Nếu số lượng giảm về 0, xóa sản phẩm khỏi giỏ hàng
                     if ($_SESSION['cart'][$id_sp]['quantity'] <= 0) {
                         unset($_SESSION['cart'][$id_sp]);
                     }
                 }
             }
         }
-        // Sau khi cập nhật, quay lại trang giỏ hàng
         header('Location: index.php?act=view_cart');
         exit();
 
@@ -324,11 +348,13 @@ switch ($act) {
             // Nếu đã đăng nhập, chuyển đến trang thanh toán
             include '../view/header.php';
             include '../view/checkout.php';
+            include_once '../view/footer.php';
         } else {
             // Nếu chưa, yêu cầu họ đăng nhập
             echo "<script>alert('Vui lòng đăng nhập để tiến hành thanh toán!');</script>";
             include '../view/header.php';
             include '../view/login.php';
+            include_once '../view/footer.php';
         }
         break;
     case 'place_order':
@@ -402,6 +428,7 @@ switch ($act) {
                     $order_info['note'],
                     $order_info['total_money']
                 );
+
                 foreach ($_SESSION['cart'] as $product_id => $item) {
                     $order_model->addOrderDetail($order_id, $product_id, $item['quantity'], $item['price']);
                     $prod_model = new product();
@@ -418,6 +445,10 @@ switch ($act) {
                     $cart_items_for_email
                 );
                 // === KẾT THÚC THÊM MỚI ===
+                if (isset($_SESSION['voucher'])) {
+                    $voucher_model = new voucher();
+                    $voucher_model->decreaseVoucherQuantity($_SESSION['voucher']['id']);
+                }
 
                 unset($_SESSION['cart']);
                 unset($_SESSION['voucher']);
@@ -509,6 +540,8 @@ switch ($act) {
     case 'order_success':
         include '../view/header.php';
         include '../view/order_success.php';
+        include_once '../view/footer.php';
+
         break;
 
     case 'order_history':
@@ -521,11 +554,13 @@ switch ($act) {
 
             include '../view/header.php';
             include '../view/order_history.php';
+            include_once '../view/footer.php';
         } else {
             // Nếu chưa đăng nhập, yêu cầu đăng nhập
             echo "<script>alert('Vui lòng đăng nhập để xem lịch sử mua hàng!');</script>";
             include '../view/header.php';
             include '../view/login.php';
+            include_once '../view/footer.php';
         }
         break;
     case 'order_detail':
@@ -543,6 +578,7 @@ switch ($act) {
                 $order_details = $order_model->getOrderDetailsByOrderId($order_id);
                 include '../view/header.php';
                 include '../view/order_detail.php';
+                include_once '../view/footer.php';
             } else {
                 // Nếu không phải, báo lỗi hoặc chuyển về trang lịch sử
                 echo "Bạn không có quyền xem đơn hàng này!";

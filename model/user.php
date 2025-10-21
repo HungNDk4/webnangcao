@@ -246,4 +246,34 @@ class user
         $params = [(int)$limit, (int)$offset];
         return $xl_data->readitem($sql, $params);
     }
+    public function checkLogin($email, $password)
+    {
+        $xl_data = new xl_data();
+        $sql = "SELECT * FROM users WHERE email = ?";
+        $params = [$email];
+        $user_row = $xl_data->readitem($sql, $params);
+
+        // Kiểm tra xem có tìm thấy user và mật khẩu khớp không
+        if ($user_row && count($user_row) > 0) {
+            $user_data = $user_row[0]; // Lấy dòng dữ liệu đầu tiên
+            // Dùng password_verify để so sánh mật khẩu nhập vào với mật khẩu đã hash trong DB
+            if (password_verify($password, $user_data['password'])) {
+                // Nếu khớp, tạo đối tượng user từ dữ liệu lấy được
+                $loggedInUser = new user();
+                $loggedInUser->setId($user_data['id']);
+                $loggedInUser->setFullname($user_data['fullname']);
+                $loggedInUser->setEmail($user_data['email']);
+                $loggedInUser->setPassword($user_data['password']); // Có thể không cần lưu pass vào session
+                $loggedInUser->setRole($user_data['role']);
+                $loggedInUser->setPhoneNumber($user_data['phone_number']);
+                $loggedInUser->setAddress($user_data['address']);
+                $loggedInUser->setStatus($user_data['status']);
+                $loggedInUser->setRank($user_data['rank']);
+                // Thêm các setter khác nếu cần
+
+                return $loggedInUser; // Trả về đối tượng user
+            }
+        }
+        return false; // Trả về false nếu không tìm thấy user hoặc sai mật khẩu
+    }
 }

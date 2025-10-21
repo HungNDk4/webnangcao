@@ -50,20 +50,32 @@
                             <tbody>
                                 <?php
                                 $total_price = 0;
+                                $prod_model_cart = new product(); // Tạo đối tượng product để kiểm tra tồn kho
+
                                 foreach ($_SESSION['cart'] as $id => $item):
-                                    $subtotal = $item['price'] * $item['quantity'];
-                                    $total_price += $subtotal;
+                                    $product_in_db = $prod_model_cart->getProductById($id);
+                                    $stock = $product_in_db['quantity'];
+                                    $is_out_of_stock = ($stock <= 0);
+
+                                    // Chỉ tính tổng tiền cho các sản phẩm còn hàng
+                                    if (!$is_out_of_stock) {
+                                        $subtotal = $item['price'] * $item['quantity'];
+                                        $total_price += $subtotal;
+                                    } else {
+                                        $subtotal = 0;
+                                    }
                                 ?>
                                     <tr>
                                         <td class="align-middle">
                                             <div class="d-flex align-items-center">
-                                                <a href="index.php?act=product_detail&id=<?= $id ?>">
-                                                    <img src="../view/image/<?= htmlspecialchars($item['image']) ?>" alt="" class="icon-shape icon-xxl">
-                                                </a>
+                                                <a href="index.php?act=product_detail&id=<?= $id ?>"><img src="../view/image/<?= htmlspecialchars($item['image']) ?>" alt="" class="icon-shape icon-xxl"></a>
                                                 <div class="ms-3">
                                                     <a href="index.php?act=product_detail&id=<?= $id ?>" class="text-inherit">
                                                         <h6 class="mb-0"><?= htmlspecialchars($item['name']) ?></h6>
                                                     </a>
+                                                    <?php if ($is_out_of_stock): ?>
+                                                        <small class="text-danger fw-bold">Đã hết hàng</small>
+                                                    <?php endif; ?>
                                                 </div>
                                             </div>
                                         </td>
@@ -71,16 +83,14 @@
                                         <td class="align-middle">
                                             <form action="index.php?act=update_cart" method="post" class="d-flex align-items-center">
                                                 <input type="hidden" name="id_sp" value="<?= $id ?>">
-                                                <button type="submit" name="action" value="decrease" class="btn btn-outline-secondary btn-sm">-</button>
+                                                <button type="submit" name="action" value="decrease" class="btn btn-outline-secondary btn-sm" <?= $is_out_of_stock ? 'disabled' : '' ?>>-</button>
                                                 <input type="text" value="<?= $item['quantity'] ?>" class="form-control text-center mx-2" style="width: 60px;" readonly>
-                                                <button type="submit" name="action" value="increase" class="btn btn-outline-secondary btn-sm">+</button>
+                                                <button type="submit" name="action" value="increase" class="btn btn-outline-secondary btn-sm" <?= ($is_out_of_stock || $item['quantity'] >= $stock) ? 'disabled' : '' ?>>+</button>
                                             </form>
                                         </td>
                                         <td class="align-middle"><?= number_format($subtotal) ?>đ</td>
                                         <td class="align-middle">
-                                            <a href="index.php?act=remove_from_cart&id=<?= $id ?>" class="text-muted" data-bs-toggle="tooltip" data-bs-placement="top" title="Xóa">
-                                                <i class="feather-icon icon-trash-2"></i>
-                                            </a>
+                                            <a href="index.php?act=remove_from_cart&id=<?= $id ?>" class="text-muted" data-bs-toggle="tooltip" data-bs-placement="top" title="Xóa"><i class="feather-icon icon-trash-2"></i></a>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
