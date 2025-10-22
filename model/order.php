@@ -132,4 +132,19 @@ class order
         $params = [(int)$limit, (int)$offset];
         return $xl_data->readitem($sql, $params);
     }
+    /**
+     * Tìm kiếm đơn hàng theo ID, tên, email, hoặc SĐT.
+     * @param string $keyword Từ khóa tìm kiếm
+     * @return array Mảng chứa các đơn hàng tìm thấy
+     */
+    public function searchOrders($keyword)
+    {
+        $xl = new xl_data();
+        $sql = "SELECT * FROM orders 
+                WHERE id = ? OR fullname LIKE ? OR email LIKE ? OR phone_number LIKE ?
+                ORDER BY order_date DESC";
+        // Tìm chính xác ID, hoặc gần đúng với tên, email, sđt
+        $params = [$keyword, "%" . $keyword . "%", "%" . $keyword . "%", "%" . $keyword . "%"];
+        return $xl->readitem($sql, $params);
+    }
 }

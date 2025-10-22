@@ -3,6 +3,15 @@
         <div class="border-bottom pb-4 mb-4 d-flex justify-content-between align-items-center">
             <div class="mb-3 mb-lg-0">
                 <h1 class="mb-1 h2 fw-bold">Quản lý Danh mục</h1>
+                <form method="POST" action="index.php?act=admin_danhmuc">
+                    <div class="input-group">
+                        <input type="text" name="search_query" class="form-control" placeholder="Tìm theo tên danh mục..."
+                            value="<?= htmlspecialchars($search_keyword) ?>">
+                        <button type="submit" name="search_submit" class="btn btn-outline-secondary">
+                            <i class="bi bi-search"></i>
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

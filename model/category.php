@@ -66,4 +66,16 @@ class category
         $params = [$id];
         $xl->execute_item($sql, $params);
     }
+    /**
+     * Tìm kiếm danh mục theo tên.
+     * @param string $keyword Từ khóa tìm kiếm
+     * @return array Mảng chứa các danh mục tìm thấy
+     */
+    public function searchCategories($keyword)
+    {
+        $xl = new xl_data();
+        $sql = "SELECT * FROM categories WHERE name LIKE ?";
+        $params = ["%" . $keyword . "%"];
+        return $xl->readitem($sql, $params);
+    }
 }

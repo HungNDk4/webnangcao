@@ -65,4 +65,43 @@ class review
         $params = [$id];
         $xl->execute_item($sql, $params);
     }
+    /**
+     * Tìm kiếm đánh giá theo tên sản phẩm, email người dùng, hoặc nội dung bình luận.
+     * @param string $keyword Từ khóa tìm kiếm
+     * @return array Mảng chứa các đánh giá tìm thấy
+     */
+    /**
+     * Tìm kiếm đánh giá theo tên sản phẩm, email người dùng, hoặc nội dung bình luận.
+     * @param string $keyword Từ khóa tìm kiếm
+     * @return array Mảng chứa các đánh giá tìm thấy
+     */
+    public function searchReviews($keyword)
+    {
+        $xl = new xl_data();
+
+        // SỬA LẠI SQL:
+        // Cần SELECT giống hệt hàm getAllReviewsWithProductInfo()
+        // để view có đủ 2 cột 'fullname' và 'product_image'
+        $sql = "SELECT 
+                    r.*, 
+                    u.fullname,  
+                    p.name as product_name,
+                    p.image as product_image 
+                FROM 
+                    reviews r
+                JOIN 
+                    users u ON r.user_id = u.id
+                JOIN 
+                    products p ON r.product_id = p.id
+                WHERE 
+                    p.name LIKE ? OR u.email LIKE ? OR r.comment LIKE ?
+                ORDER BY 
+                    r.created_at DESC";
+
+        $search_term = "%" . $keyword . "%";
+        // Cung cấp đủ 3 tham số cho 3 dấu ?
+        $params = [$search_term, $search_term, $search_term];
+
+        return $xl->readitem($sql, $params);
+    }
 }

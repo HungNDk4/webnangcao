@@ -140,4 +140,16 @@ class voucher
         $params = [$voucher_id];
         return $xl_data->execute_item($sql, $params);
     }
+    /**
+     * Tìm kiếm voucher theo mã code.
+     * @param string $keyword Từ khóa tìm kiếm
+     * @return array Mảng chứa các voucher tìm thấy
+     */
+    public function searchVouchers($keyword)
+    {
+        $xl = new xl_data();
+        $sql = "SELECT * FROM vouchers WHERE code LIKE ?";
+        $params = ["%" . $keyword . "%"];
+        return $xl->readitem($sql, $params);
+    }
 }

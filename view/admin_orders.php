@@ -3,6 +3,15 @@
         <div class="border-bottom pb-4 mb-4 d-flex justify-content-between align-items-center">
             <div class="mb-3 mb-lg-0">
                 <h1 class="mb-1 h2 fw-bold">Quản lý Đơn hàng</h1>
+                <form method="POST" action="index.php?act=admin_orders">
+                    <div class="input-group">
+                        <input type="text" name="search_query" class="form-control" placeholder="Tìm theo ID, tên, email, SĐT..."
+                            value="<?= htmlspecialchars($search_keyword) ?>">
+                        <button type="submit" name="search_submit" class="btn btn-outline-secondary">
+                            <i class="bi bi-search"></i>
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -59,27 +68,33 @@
                 </tbody>
                 </table>
             </div>
-            <div class="mt-4">
-                <nav aria-label="Page navigation">
-                    <ul class="pagination justify-content-center">
-                        <li class="page-item <?= ($current_page <= 1) ? 'disabled' : '' ?>">
-                            <a class="page-link" href="index.php?act=admin_orders&page=<?= $current_page - 1 ?>">
-                                <span>&laquo;</span>
-                            </a>
-                        </li>
-                        <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-                            <li class="page-item <?= ($i == $current_page) ? 'active' : '' ?>">
-                                <a class="page-link" href="index.php?act=admin_orders&page=<?= $i ?>"><?= $i ?></a>
+            <?php
+            // Chỉ hiển thị phân trang khi KHÔNG tìm kiếm
+            if (empty($search_keyword)):
+            ?>
+                <div class="mt-4">
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item <?= ($current_page <= 1) ? 'disabled' : '' ?>">
+                                <a class="page-link" href="index.php?act=admin_orders&page=<?= $current_page - 1 ?>">
+                                    <span>&laquo;</span>
+                                </a>
                             </li>
-                        <?php endfor; ?>
-                        <li class="page-item <?= ($current_page >= $total_pages) ? 'disabled' : '' ?>">
-                            <a class="page-link" href="index.php?act=admin_orders&page=<?= $current_page + 1 ?>">
-                                <span>&raquo;</span>
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
+                            <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                                <li class="page-item <?= ($i == $current_page) ? 'active' : '' ?>">
+                                    <a class="page-link" href="index.php?act=admin_orders&page=<?= $i ?>"><?= $i ?></a>
+                                </li>
+                            <?php endfor; ?>
+                            <li class="page-item <?= ($current_page >= $total_pages) ? 'disabled' : '' ?>">
+                                <a class="page-link" href="index.php?act=admin_orders&page=<?= $current_page + 1 ?>">
+                                    <span>&raquo;</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            <?php endif; // Đóng thẻ if của phân trang 
+            ?>
         </div>
     </div>
 </div>

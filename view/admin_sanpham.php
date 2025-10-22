@@ -54,6 +54,20 @@
                 <hr>
                 <div class="mt-4">
                     <h4 class="mb-3">Danh sách Sản phẩm</h4>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <form method="POST" action="index.php?act=admin_sanpham">
+                                <div class="input-group">
+                                    <input type="text" name="search_query" class="form-control" placeholder="Tìm kiếm theo tên sản phẩm..."
+                                        value="<?= htmlspecialchars($search_keyword) // Giữ lại giá trị sau khi tìm 
+                                                ?>">
+                                    <button type="submit" name="search_submit" class="btn btn-outline-secondary">
+                                        <i class="bi bi-search"></i>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                     <div class="table-responsive">
                         <table class="table table-hover text-nowrap">
                             <thead class="table-light">
@@ -97,29 +111,37 @@
                     </tbody>
                     </table>
                 </div>
-                <div class="mt-4">
-                    <nav aria-label="Page navigation">
-                        <ul class="pagination justify-content-center">
-                            <li class="page-item <?= ($current_page <= 1) ? 'disabled' : '' ?>">
-                                <a class="page-link" href="index.php?act=admin_products&page=<?= $current_page - 1 ?>">
-                                    <span>&laquo;</span>
-                                </a>
-                            </li>
-
-                            <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-                                <li class="page-item <?= ($i == $current_page) ? 'active' : '' ?>">
-                                    <a class="page-link" href="index.php?act=admin_products&page=<?= $i ?>"><?= $i ?></a>
+                <?php
+                // Chỉ hiển thị phân trang khi KHÔNG có tìm kiếm
+                // Vì logic tìm kiếm của chúng ta đang trả về tất cả kết quả
+                if (empty($search_keyword)):
+                ?>
+                    <div class="mt-4">
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination justify-content-center">
+                                <li class="page-item <?= ($current_page <= 1) ? 'disabled' : '' ?>">
+                                    <a class="page-link" href="index.php?act=admin_products&page=<?= $current_page - 1 ?>">
+                                        <span>&laquo;</span>
+                                    </a>
                                 </li>
-                            <?php endfor; ?>
 
-                            <li class="page-item <?= ($current_page >= $total_pages) ? 'disabled' : '' ?>">
-                                <a class="page-link" href="index.php?act=admin_products&page=<?= $current_page + 1 ?>">
-                                    <span>&raquo;</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
+                                <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                                    <li class="page-item <?= ($i == $current_page) ? 'active' : '' ?>">
+                                        <a class="page-link" href="index.php?act=admin_products&page=<?= $i ?>"><?= $i ?></a>
+                                    </li>
+                                <?php endfor; ?>
+
+                                <li class="page-item <?= ($current_page >= $total_pages) ? 'disabled' : '' ?>">
+                                    <a class="page-link" href="index.php?act=admin_products&page=<?= $current_page + 1 ?>">
+                                        <span>&raquo;</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                <?php endif; // Đóng thẻ if của phân trang 
+                ?>
+
             </div>
         </div>
     </div>

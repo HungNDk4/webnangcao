@@ -63,4 +63,16 @@ class  danhmuc
         $sql = "UPDATE `danhmuc` SET `name` = '" . $dm->getName() . "' WHERE `danhmuc`.`id` = " . $dm->getId();
         $xl->execute_item($sql);
     }
+    /**
+     * Tìm kiếm danh mục theo tên.
+     * @param string $keyword Từ khóa tìm kiếm
+     * @return array Mảng chứa các danh mục tìm thấy
+     */
+    public function searchCategories($keyword)
+    {
+        $xl = new xl_data();
+        $sql = "SELECT * FROM categories WHERE name LIKE ?";
+        $params = ["%" . $keyword . "%"];
+        return $xl->readitem($sql, $params);
+    }
 }

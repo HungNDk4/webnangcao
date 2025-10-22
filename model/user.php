@@ -276,4 +276,25 @@ class user
         }
         return false; // Trả về false nếu không tìm thấy user hoặc sai mật khẩu
     }
+    /**
+     * Tìm kiếm khách hàng (customer) theo tên hoặc email.
+     * @param string $keyword Từ khóa tìm kiếm
+     * @return array Mảng chứa các khách hàng tìm thấy
+     */
+    public function searchCustomers($keyword)
+    {
+        $xl = new xl_data();
+        // Tìm khách hàng (role = 'customer') có tên HOẶC email chứa từ khóa
+        $sql = "SELECT * FROM users WHERE (fullname LIKE ? OR email LIKE ?) AND role = 'customer'";
+        $params = ["%" . $keyword . "%", "%" . $keyword . "%"];
+        return $xl->readitem($sql, $params);
+    }
+    public function searchstaff($keyword)
+    {
+        $xl = new xl_data();
+        // Tìm khách hàng (role = 'customer') có tên HOẶC email chứa từ khóa
+        $sql = "SELECT * FROM users WHERE (fullname LIKE ? OR email LIKE ?) AND role not like 'customer'";
+        $params = ["%" . $keyword . "%", "%" . $keyword . "%"];
+        return $xl->readitem($sql, $params);
+    }
 }

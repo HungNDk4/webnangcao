@@ -35,6 +35,15 @@
         <div class="card">
             <div class="card-header">
                 <h4 class="mb-0">Danh sách Vouchers</h4>
+                <form method="POST" action="index.php?act=admin_vouchers">
+                    <div class="input-group">
+                        <input type="text" name="search_query" class="form-control" placeholder="Tìm theo mã voucher..."
+                            value="<?= htmlspecialchars($search_keyword) ?>">
+                        <button type="submit" name="search_submit" class="btn btn-outline-secondary">
+                            <i class="bi bi-search"></i>
+                        </button>
+                    </div>
+                </form>
             </div>
             <div class="card-body">
                 <div class="table-responsive">

@@ -144,11 +144,26 @@ switch ($act) {
 
         // ============== CRUD DANH MỤC ==============
     case 'admin_danhmuc':
-        $cat_model = new category();
-        $danhmuc = $cat_model->getAllCategories();
-        include '../view/admin_header.php';
-        include '../view/admin_danhmuc.php'; // File này sẽ được cập nhật ở bước sau
-        include '../view/admin_footer.php';
+        if (isset($_SESSION['user']) && $_SESSION['user']->getRole() === 'admin') {
+            $cat_model = new category();
+            $search_keyword = ''; // Biến lưu từ khóa
+
+            if (isset($_POST['search_submit']) && !empty($_POST['search_query'])) {
+                // --- LOGIC TÌM KIẾM ---
+                $search_keyword = $_POST['search_query'];
+                // Lấy danh mục từ kết quả tìm kiếm
+                $danhmuc = $cat_model->searchCategories($search_keyword);
+            } else {
+                // --- LOGIC HIỆN TẠI (LẤY TẤT CẢ) ---
+                $danhmuc = $cat_model->getAllCategories();
+            }
+
+            include '../view/admin_header.php';
+            include '../view/admin_danhmuc.php';
+            include '../view/admin_footer.php';
+        } else {
+            echo "Bạn không có quyền truy cập!";
+        }
         break;
     case 'themdm':
         $newCat = new category();
@@ -685,24 +700,40 @@ switch ($act) {
             $danhmuc = $cat_model->getAllCategories();
             $prod_model = new product();
 
-            // --- BẮT ĐẦU LOGIC PHÂN TRANG ---
-            $products_per_page = 5; // Hiển thị 5 sản phẩm trên mỗi trang admin
+            $search_keyword = ''; // Biến để lưu từ khóa tìm kiếm
 
-            $total_products = $prod_model->countAllProducts();
-            $total_pages = ceil($total_products / $products_per_page);
+            // Kiểm tra xem người dùng có gửi form tìm kiếm không
+            if (isset($_POST['search_submit']) && !empty($_POST['search_query'])) {
+                // --- LOGIC KHI TÌM KIẾM ---
+                $search_keyword = $_POST['search_query'];
 
-            $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-            if ($current_page < 1) {
+                // Gọi hàm searchProducts đã có sẵn trong model
+                $danhsach = $prod_model->searchProducts($search_keyword);
+
+                // Khi tìm kiếm, chúng ta sẽ hiển thị tất cả kết quả
+                // nên tạm thời tắt phân trang
+                $total_pages = 1;
                 $current_page = 1;
-            } elseif ($current_page > $total_pages && $total_pages > 0) {
-                $current_page = $total_pages;
+            } else {
+                // --- LOGIC PHÂN TRANG HIỆN TẠI (KHI KHÔNG TÌM KIẾM) ---
+                $products_per_page = 5; // Hiển thị 5 sản phẩm trên mỗi trang admin
+
+                $total_products = $prod_model->countAllProducts();
+                $total_pages = ceil($total_products / $products_per_page);
+
+                $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+                if ($current_page < 1) {
+                    $current_page = 1;
+                } elseif ($current_page > $total_pages && $total_pages > 0) {
+                    $current_page = $total_pages;
+                }
+
+                $offset = ($current_page - 1) * $products_per_page;
+
+                // Lấy sản phẩm cho trang admin hiện tại
+                $danhsach = $prod_model->getProductsByPage($products_per_page, $offset);
             }
-
-            $offset = ($current_page - 1) * $products_per_page;
-
-            // Lấy sản phẩm cho trang admin hiện tại
-            $danhsach = $prod_model->getProductsByPage($products_per_page, $offset);
-            // --- KẾT THÚC LOGIC PHÂN TRANG ---
+            // --- KẾT THÚC LOGIC ---
 
             include '../view/admin_header.php';
             include '../view/admin_sanpham.php';
@@ -715,25 +746,32 @@ switch ($act) {
     case 'admin_orders':
         if (isset($_SESSION['user']) && $_SESSION['user']->getRole() === 'admin') {
             $order_model = new order();
+            $search_keyword = ''; // Biến lưu từ khóa
 
-            // --- BẮT ĐẦU LOGIC PHÂN TRANG ---
-            $orders_per_page = 10; // Hiển thị 10 đơn hàng trên mỗi trang
+            if (isset($_POST['search_submit']) && !empty($_POST['search_query'])) {
+                // --- LOGIC TÌM KIẾM ---
+                $search_keyword = $_POST['search_query'];
+                $list_orders = $order_model->searchOrders($search_keyword);
 
-            $total_orders = $order_model->countAllOrders();
-            $total_pages = ceil($total_orders / $orders_per_page);
-
-            $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-            if ($current_page < 1) {
+                // Tắt phân trang khi tìm kiếm
+                $total_pages = 1;
                 $current_page = 1;
-            } elseif ($current_page > $total_pages && $total_pages > 0) {
-                $current_page = $total_pages;
+            } else {
+                // --- LOGIC PHÂN TRANG HIỆN TẠI ---
+                $orders_per_page = 10;
+                $total_orders = $order_model->countAllOrders();
+                $total_pages = ceil($total_orders / $orders_per_page);
+
+                $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+                if ($current_page < 1) {
+                    $current_page = 1;
+                } elseif ($current_page > $total_pages && $total_pages > 0) {
+                    $current_page = $total_pages;
+                }
+
+                $offset = ($current_page - 1) * $orders_per_page;
+                $list_orders = $order_model->getOrdersByPage($orders_per_page, $offset);
             }
-
-            $offset = ($current_page - 1) * $orders_per_page;
-
-            // Lấy đơn hàng cho trang hiện tại
-            $list_orders = $order_model->getOrdersByPage($orders_per_page, $offset);
-            // --- KẾT THÚC LOGIC PHÂN TRANG ---
 
             include '../view/admin_header.php';
             include '../view/admin_orders.php';
@@ -778,25 +816,32 @@ switch ($act) {
     case 'admin_users':
         if (isset($_SESSION['user']) && $_SESSION['user']->getRole() === 'admin') {
             $user_model = new user();
+            $search_keyword = ''; // Biến lưu từ khóa
 
-            // --- BẮT ĐẦU LOGIC PHÂN TRANG ---
-            $users_per_page = 10; // Hiển thị 10 khách hàng trên mỗi trang
+            if (isset($_POST['search_submit']) && !empty($_POST['search_query'])) {
+                // --- LOGIC TÌM KIẾM ---
+                $search_keyword = $_POST['search_query'];
+                $list_users = $user_model->searchCustomers($search_keyword);
 
-            $total_users = $user_model->countAllCustomers();
-            $total_pages = ceil($total_users / $users_per_page);
-
-            $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-            if ($current_page < 1) {
+                // Tắt phân trang khi tìm kiếm
+                $total_pages = 1;
                 $current_page = 1;
-            } elseif ($current_page > $total_pages && $total_pages > 0) {
-                $current_page = $total_pages;
+            } else {
+                // --- LOGIC PHÂN TRANG HIỆN TẠI ---
+                $users_per_page = 10;
+                $total_users = $user_model->countAllCustomers();
+                $total_pages = ceil($total_users / $users_per_page);
+
+                $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+                if ($current_page < 1) {
+                    $current_page = 1;
+                } elseif ($current_page > $total_pages && $total_pages > 0) {
+                    $current_page = $total_pages;
+                }
+
+                $offset = ($current_page - 1) * $users_per_page;
+                $list_users = $user_model->getCustomersByPage($users_per_page, $offset);
             }
-
-            $offset = ($current_page - 1) * $users_per_page;
-
-            // Lấy khách hàng cho trang hiện tại
-            $list_users = $user_model->getCustomersByPage($users_per_page, $offset);
-            // --- KẾT THÚC LOGIC PHÂN TRANG ---
 
             include '../view/admin_header.php';
             include '../view/admin_users.php';
@@ -917,9 +962,19 @@ switch ($act) {
     case 'admin_reviews':
         if (isset($_SESSION['user']) && $_SESSION['user']->getRole() === 'admin') {
             $review_model = new review();
-            $list_reviews = $review_model->getAllReviewsWithProductInfo();
+            $search_keyword = ''; // Biến lưu từ khóa
+
+            if (isset($_POST['search_submit']) && !empty($_POST['search_query'])) {
+                // --- LOGIC TÌM KIẾM ---
+                $search_keyword = $_POST['search_query'];
+                $list_reviews = $review_model->searchReviews($search_keyword);
+            } else {
+                // --- LOGIC HIỆN TẠI (LẤY TẤT CẢ) ---
+                $list_reviews = $review_model->getAllReviewsWithProductInfo();
+            }
+
             include '../view/admin_header.php';
-            include '../view/admin_reviews.php'; // File này sẽ được cập nhật ở bước sau
+            include '../view/admin_reviews.php';
             include '../view/admin_footer.php';
         } else {
             echo "Bạn không có quyền truy cập!";
@@ -964,15 +1019,24 @@ switch ($act) {
     case 'admin_vouchers':
         if (isset($_SESSION['user']) && $_SESSION['user']->getRole() === 'admin') {
             $voucher_model = new voucher();
-            $list_vouchers = $voucher_model->getAllVouchers();
+            $search_keyword = ''; // Biến lưu từ khóa
+
+            if (isset($_POST['search_submit']) && !empty($_POST['search_query'])) {
+                // --- LOGIC TÌM KIẾM ---
+                $search_keyword = $_POST['search_query'];
+                $list_vouchers = $voucher_model->searchVouchers($search_keyword);
+            } else {
+                // --- LOGIC HIỆN TẠI ---
+                $list_vouchers = $voucher_model->getAllVouchers();
+            }
+
             include '../view/admin_header.php';
-            include '../view/admin_vouchers.php'; // File này sẽ được cập nhật ở bước sau
+            include '../view/admin_vouchers.php';
             include '../view/admin_footer.php';
         } else {
             echo "Bạn không có quyền truy cập!";
         }
         break;
-
 
 
     case 'delete_voucher':
